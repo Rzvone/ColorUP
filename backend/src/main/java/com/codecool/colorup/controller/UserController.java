@@ -3,6 +3,7 @@ package com.codecool.colorup.controller;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,20 +22,21 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @PostMapping
-    public void registerNewUser(@RequestBody User user){
-        userService.addNewUser(user);
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
-    @PutMapping(path = "{userId}")
-    public void updateUser(
-            @PathVariable("userId") Long userId,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String contactNumber
+    @PostMapping
+    public ResponseEntity<String> registerNewUser(@RequestBody User user){
+       return ResponseEntity.ok(userService.addNewUser(user));
+    }
+
+    @PutMapping(path = "/{id}")
+    public User updateUser(
+            @PathVariable Long id,
+            @RequestBody User user
             ){
-        userService.updateUser(userId,firstName,lastName,email,password,contactNumber);
+       return userService.updateUser(id,user);
     }
 }
