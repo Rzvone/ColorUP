@@ -5,6 +5,7 @@ import com.codecool.colorup.model.Appointment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,24 +35,10 @@ public class User {
     private String email;
     @NotNull
     private String password;
-    @NotNull
     private String contactNumber;
     private RoleType roleType;
 
-    @OneToMany
-    @JsonIgnore
+    @OneToMany(mappedBy = "user")
     private List<Appointment> appointmentList = new ArrayList<>();
 
-    public void addAppointment(Appointment appointment){
-        this.appointmentList.add(appointment);
-
-    }
-
-    public void removeAppointment(Appointment appointment){
-        this.appointmentList.remove(appointment);
-    }
-
-    public List<Appointment> getAppointments(){
-        return null;
-    }
 }
