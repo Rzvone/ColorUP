@@ -17,22 +17,22 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping
+    @GetMapping("/getAllUsers")
     public List<User> getUser(){
         return userService.getUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getUser/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    @PostMapping
+    @PostMapping("/postUser")
     public ResponseEntity<String> registerNewUser(@RequestBody User user){
        return ResponseEntity.ok(userService.addNewUser(user));
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/updateUser/{id}")
     public User updateUser(
             @PathVariable Long id,
             @RequestBody User user
