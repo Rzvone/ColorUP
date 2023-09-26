@@ -42,8 +42,15 @@ public class UserService {
 
     @Modifying
     @Transactional
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, User updatedUser) throws Exception {
+        userRepository.findById(id).orElseThrow(()->new Exception ("ID Not found " + id));
+//        }
         updatedUser.setId(id);
         return userRepository.save(updatedUser);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+
     }
 }
