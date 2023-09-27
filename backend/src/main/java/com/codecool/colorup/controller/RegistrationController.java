@@ -22,7 +22,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public ModelAndView regustration() {
+    public ModelAndView registration() {
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
         modelAndView.addObject("user", user);
@@ -39,11 +39,6 @@ public class RegistrationController {
                             "There is already a user registered with the email provided");
         }
 
-        if (userService.getUserById(user.getId()) != null) {
-            bindingResult
-                    .rejectValue("id", "error.user",
-                            "There is already a user registered with the id provided");
-        }
 
 
         ModelAndView modelAndView = new ModelAndView();
@@ -55,8 +50,8 @@ public class RegistrationController {
             userService.addNewUser(user);
 
             modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", new User());
-            modelAndView.setViewName("/registration");
+            modelAndView.addObject("user", user);
+            modelAndView.setViewName("/login");
         }
 
         return modelAndView;
