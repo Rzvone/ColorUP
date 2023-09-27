@@ -24,13 +24,13 @@ public class AppointmentController {
     }
 
     @GetMapping(path = "/getAppointment/{id}")
-    public Appointment getAppointmentById(@PathVariable Long id){
-        return appointmentService.getAppointmentById(id);
+        public Appointment getAppointmentById(@PathVariable Long id){
+            return appointmentService.getAppointmentById(id);
 
     }
 
     @PostMapping(path = "/postAppointment/{userId}")
-    public ResponseEntity<String> addAppointment(@PathVariable Long userId, @RequestBody Appointment appointment){
+    public ResponseEntity<String> addAppointment(@PathVariable Long userId,@RequestBody Appointment appointment){
         appointmentService.addNewAppointment(userId,appointment);
         return ResponseEntity.ok("Appointment added successfully. ");
     }

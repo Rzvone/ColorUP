@@ -1,0 +1,19 @@
+@startuml
+class User{
+-id
+-firstName
+-lastName
+-email
+-password
+-contactNumber:
+-role: Enum
+-List<Appointment>
+}
+
+class Appointment{
+-LocalDate localDate
+-description
+}
+
+@enduml
+

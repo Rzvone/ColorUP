@@ -29,19 +29,19 @@ public class UserController {
 
     @PostMapping("/postUser")
     public ResponseEntity<String> registerNewUser(@RequestBody User user){
-        return ResponseEntity.ok(userService.addNewUser(user));
+       return ResponseEntity.ok(userService.addNewUser(user));
     }
 
     @PutMapping(path = "/updateUser/{id}")
     public User updateUser(
             @PathVariable Long id,
             @RequestBody User user
-    ) throws Exception {
-        return userService.updateUser(id,user);
+            ) throws Exception {
+       return userService.updateUser(id,user);
     }
 
     @DeleteMapping(path ="/deleteUser/{id}" )
     public void deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
+         userService.deleteUser(id);
     }
 }

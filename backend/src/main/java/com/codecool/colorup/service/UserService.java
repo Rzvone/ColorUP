@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -29,11 +28,6 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
-    }
-
-    public User getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
     }
 
     public String addNewUser(User user) {
@@ -59,6 +53,4 @@ public class UserService {
         userRepository.deleteById(id);
 
     }
-
-
 }
