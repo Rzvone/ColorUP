@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import About from './Components/About';
 import Error from './Components/Error';
 import NavBar from './Components/NavBar';
+import Login from './Components/Login';
 
 import Register from './Pages/Register';
 
@@ -13,7 +14,8 @@ function App() {
       <Routes> 
         <Route path='/about' element={<About/>} /> 
         <Route path='/error' element={<Error />} />
-        <Route path='/register' element={<Register/>}/>
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />}/>
     </Routes>
     </div>
   );
