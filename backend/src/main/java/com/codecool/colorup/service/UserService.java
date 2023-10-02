@@ -32,7 +32,7 @@ public class UserService {
 
     public String addNewUser(User user) {
         Optional<User> userOptional = userRepository
-                .findUserByEmail(user.getEmail());
+                .findByEmail(user.getEmail());
         if (userOptional.isPresent()) {
             return "Account already exist. Please choose another one. ";
         }
