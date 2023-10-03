@@ -7,32 +7,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);
 
-  // const onSubmit = async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-
-  //     const response = { email, password }
-  //     console.log(response);
-    
-  //     fetch("http://localhost:8080/api/v1/auth/authenticate", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({email,password}),
-  //     }).then((response) => {
-  //       response.json()
-  //     }).then((res) => {
-  //       console.log(res)
-  //     })
-  //     // const accessToken = response?.data?.token;
-  //     // const roles = response?.data?.role;
-  //     setEmail("");
-  //     setPassword("");
-  //     setSuccess(true);
-  //   // } catch (err) {
-  //   //   console.log(err);
-  //   // }
-  // };
   const onSubmit = () => {
     fetch("http://localhost:8080/api/v1/auth/authenticate", {
       method: "POST",
@@ -44,7 +18,10 @@ const Login = () => {
         localStorage.setItem('token', data.token);
       }).catch(err => {
         console.log(err);
-    })
+      })
+    setEmail("");
+    setPassword("");
+    setSuccess(true)
   }
 
   return (
