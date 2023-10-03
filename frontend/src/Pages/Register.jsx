@@ -11,32 +11,12 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    if (id === "firstName") {
-      setFirstName(value);
-    }
-    if (id === "lastName") {
-      setLastName(value);
-    }
-    if (id === "email") {
-      setEmail(value);
-    }
-    if (id === "password") {
-      setPassword(value);
-    }
-    if (id === "contactNumber") {
-      setContactNumber(value);
-    }
-  };
-
   const handleSubmit = () => {
-    // e.preventDefault()
 
     const register = { firstName, lastName, email, password, contactNumber }
     
     setIsPending(true);
-    fetch('http://localhost:8080/users/postUser', {
+    fetch('http://localhost:8080/api/v1/auth/register', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(register)
@@ -58,7 +38,7 @@ const Register = () => {
             id="firstName"
             placeholder="First Name"
             value={firstName}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => setFirstName(e.target.value)}
           />
         </div>
         <div>
@@ -69,7 +49,7 @@ const Register = () => {
             id="lastName"
             placeholder="LastName"
             value={lastName}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => setLastName(e.target.value)}
           />
         </div>
         <div>
@@ -79,7 +59,7 @@ const Register = () => {
             id="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
@@ -89,7 +69,7 @@ const Register = () => {
             id="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div>
@@ -99,7 +79,7 @@ const Register = () => {
             id="contactNumber"
             placeholder="Contact Number"
             value={contactNumber}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => setContactNumber(e.target.value)}
           />
         </div>
       </div>
