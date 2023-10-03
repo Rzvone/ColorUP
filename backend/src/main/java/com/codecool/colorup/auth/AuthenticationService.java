@@ -26,6 +26,7 @@ private final AuthenticationManager authenticationManager;
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .contactNumber(request.getContactNumber())
                 .role(Role.VISITOR)
                 .build();
         repository.save(user);
