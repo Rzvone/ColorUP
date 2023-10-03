@@ -11,26 +11,30 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleSubmit =async () => {
 
     const register = { firstName, lastName, email, password, contactNumber }
     
     setIsPending(true);
+
     fetch('http://localhost:8080/api/v1/auth/register', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(register)
-    }).then(() => {
-      console.log("New register added");
-      setIsPending(false);
+    }).then((res) => res.json())
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        alert("Accout has been created !")
+      }).catch((err) => {
+        console.log(err);
     })
-    navigate('/login')
-      
+    navigate('/')
   };
 
   return (
-    <div>
+    <div className="login-wrapper">
       <div>
+        <h2>Register your new account</h2>
         <div>
           <label>First Name </label>
           <input
