@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { useRef, useState } from "react";
+import { Link ,useNavigate} from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [errMsg, setErrMsg] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);
@@ -11,18 +12,29 @@ const Login = () => {
     fetch("http://localhost:8080/api/v1/auth/authenticate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({email,password})
-    }).then((res) => res.json())
+      body: JSON.stringify({ email, password }),
+    })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-        localStorage.setItem('token', data.token);
-      }).catch(err => {
-        console.log(err);
+        console.log(data);
+        localStorage.setItem("token", data.token);
       })
+      .catch((err) => {
+        if (!err?.response) {
+          setErrMsg("No Server Response");
+        } else if (err.response?.status === 400) {
+          setErrMsg("Missing Username or Password");
+        } else if (err.response?.status === 401) {
+          setErrMsg("Unauthorized");
+        } else {
+          setErrMsg("Login failed");
+        }
+      });
     setEmail("");
     setPassword("");
-    setSuccess(true)
-  }
+    setSuccess(true);
+    // navigate('/about')
+  };
 
   return (
     <>
@@ -44,6 +56,7 @@ const Login = () => {
                 type="email"
                 id="email"
                 placeholder="Email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -54,6 +67,7 @@ const Login = () => {
                 type="password"
                 id="password"
                 placeholder="Password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
