@@ -14,6 +14,7 @@ import Register from './Pages/Register';
 import LoginPage from './Pages/LoginPage';
 import ForgotPassword from './Pages/ForgotPassword';
 import Profile from './Pages/Profile';
+import Contact from './Components/Contact';
 
 function App() {
   const theme = createTheme(themeSettings('light'))
@@ -23,7 +24,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline/> 
             <NavBar/>
-            <Routes> 
+        <Routes> 
+              <Route path='/contact' element={<Contact/>} />
               <Route path='/about' element={<About/>} /> 
               <Route path='/error' element={<Error />} />
               <Route path='/register' element={<Register />} />
