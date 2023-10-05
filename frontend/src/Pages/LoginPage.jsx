@@ -6,9 +6,15 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import * as yup from "yup";
+import { Formik } from "formik";
+import { Grid, TextField, Button } from "@mui/material";
+import Register from "./Register";
+import { Link as RouterLink } from "react-router-dom";
+
 
 const LoginPage = () => {
   const [value, setValue] = useState(0);
+
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -47,6 +53,10 @@ const LoginPage = () => {
     firstName: yup.string().required("required"),
     lastName: yup.string().required("required"),
     email: yup.string().email("Invalid Email").required("required"),
+    contactNumber: yup
+      .string()
+      .required("required")
+      .matches(/^\d+$/, "Contact number must contain only digits"),
     password: yup.string().required("required"),
     confirmPassword: yup
       .string()
@@ -61,6 +71,7 @@ const LoginPage = () => {
     firstName: "",
     lastName: "",
     email: "",
+    contactNumber: "",
     password: "",
     confirmPassword: "",
   };
@@ -70,7 +81,212 @@ const LoginPage = () => {
     password: "",
   };
 
-  return <div>LoginPage</div>;
+  const handleRegistration = async (values, onSubmitProps) => {
+
+  }
+
+  const handleLogIn = async (values, onSubmitProps) => {
+
+  }
+
+  return (
+    <Box sx={{ p: 2, maxWidth: "sm", marginLeft: "auto", marginRight: "auto" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
+          <Tab label="Sign Up" {...a11yProps(0)} />
+          <Tab label="Log In" {...a11yProps(1)} />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <Formik
+            onSubmit={handleRegistration}
+            initialValues={initialValuesRegister}
+            validationSchema={registerSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+              resetForm
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label = "First Name"
+                      variant= "outlined"
+                      name = "firstName"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.firstName}
+                      error={Boolean(touched.firstName) && Boolean(errors.firstName)}
+                      helperText={touched.firstName && errors.firstName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Last Name"
+                      variant="outlined"
+                      name="lastName"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.lastName}
+                      error={Boolean(touched.lastName) && Boolean(errors.lastName)}
+                      helperText={touched.lastName && errors.lastName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="E-mail address"
+                      variant="outlined"
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.email}
+                      error={Boolean(touched.email) && Boolean(errors.email)}
+                      helperText={touched.email && errors.email}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Contact number"
+                      variant="outlined"
+                      name="contactNumber"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.contactNumber}
+                      error={Boolean(touched.contactNumber) && Boolean(errors.contactNumber)}
+                      helperText={touched.contactNumber && errors.contactNumber}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      variant="outlined"
+                      type="password"
+                      name="password"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.password}
+                      error={Boolean(touched.password) && Boolean(errors.password)}
+                      helperText={touched.password && errors.password}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Confirm Password"
+                      variant="outlined"
+                      type="password"
+                      name="confirmPassword"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.confirmPassword}
+                      error={Boolean(touched.confirmPassword) && Boolean(errors.confirmPassword)}
+                      helperText={touched.confirmPassword && errors.confirmPassword}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    type="submit"
+                    fullWidth
+                  >
+                    Sign Up
+                  </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          </Formik>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+        <Formik
+            onSubmit={handleLogIn}
+            initialValues={initialValuesLogin}
+            validationSchema={loginSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      variant="outlined"
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.login_email}
+                      error={Boolean(touched.email) && Boolean(errors.email)}
+                      helperText={touched.email && errors.email}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      variant="outlined"
+                      type="password"
+                      name="password"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.password}
+                      error={
+                        Boolean(touched.password) && Boolean(errors.password)
+                      }
+                      helperText={touched.password && errors.password}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      component={RouterLink}
+                      to="/forgot-password"
+                      sx={{textDecoration: "none", color:"gray"}}
+                    >
+                      Forgot password ?
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      type="submit"
+                      fullWidth
+                    >
+                      Log In
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          </Formik>
+        </TabPanel>
+      </Box>
+    </Box>
+  );
 };
 
 export default LoginPage;
