@@ -2,10 +2,7 @@ package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.jetbrains.annotations.NotNull;
@@ -18,12 +15,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @DynamicUpdate
 @DynamicInsert
+@Getter
+@Setter
 @Table(name = "Users")
 public class User implements UserDetails {
     @Id
@@ -50,6 +48,7 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @NotNull
     @Override
     public String getPassword(){
         return password;
@@ -79,4 +78,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
