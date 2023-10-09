@@ -4,12 +4,16 @@ import com.codecool.colorup.model.Appointment;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.repository.AppointmentRepository;
 import com.codecool.colorup.repository.UserRepository;
+import jakarta.persistence.Entity;
 import jakarta.transaction.Transactional;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 public class AppointmentService {
@@ -31,15 +35,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void addNewAppointment(Long userId, Appointment appointment) {
-        User user = User.builder()
-                .id(userId)
-                .firstName("Jimmy")
-                .lastName("Jonnny")
-                .email("jimmy.johnny@gmail.com")
-                .password("password")
-                .build();
-        appointment.setUser(user);
-        appointmentRepository.save(appointment);
+    public void addNewAppointment(List<Long> serviceIds, Long providerId, Long userId, LocalDateTime start) {
+
     }
 }
