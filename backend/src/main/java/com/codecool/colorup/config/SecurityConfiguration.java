@@ -30,6 +30,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/auth/**")
                                 .permitAll()
 //                                .requestMatchers("/appointment").hasRole("VISITOR")
+                                .requestMatchers("/users/**")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

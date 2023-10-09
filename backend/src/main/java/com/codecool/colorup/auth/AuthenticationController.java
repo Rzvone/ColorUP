@@ -8,12 +8,14 @@ import com.codecool.colorup.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -30,6 +32,10 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
+        Optional<User> existingUser = repository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthenticationResponse("Email already in use"));
+        }
      return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
@@ -56,7 +62,7 @@ public class AuthenticationController {
         repository.save(user);
 
         // Send a success response to the client.
-        return ResponseEntity.ok(new AuthenticationResponse(jwtService.generateToken(user)));
+        return ResponseEntity.ok(new AuthenticationResponse(jwtService.generateToken(user),user,"Success"));
     }
 
     private User validatePasswordResetToken(String token) {

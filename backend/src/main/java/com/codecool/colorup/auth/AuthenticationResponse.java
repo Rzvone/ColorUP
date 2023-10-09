@@ -1,9 +1,7 @@
 package com.codecool.colorup.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.codecool.colorup.model.User;
+import lombok.*;
 
 @Data
 @Builder
@@ -12,5 +10,10 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     private String token;
+    private User user;
+    private String message;
 
+    public AuthenticationResponse(String message) {
+        this.message = message;
+    }
 }
