@@ -45,7 +45,7 @@ const NavBar = () => {
   };
 
   const pages = ["Services", "About", "Contact"];
-  const settings = ["Profile", "Logout"];
+  const settings = ["Profile", "Appointments", "Logout"];
 
   return (
     <AppBar position="static" enableColorOnDark>
@@ -211,7 +211,7 @@ const NavBar = () => {
           ) : (
             <RouterLink
               key={Login}
-              to="/login"
+              to="/authentication"
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <Button
