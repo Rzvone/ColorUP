@@ -8,16 +8,20 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { Link as RouterLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
-  const firstName = "Alexandru";
-  const lastName = "Vieru";
-  const email = "vieru.alexandruu@gmail.com";
-  const contactNumber = "0733139412";
 
   const [value, setValue] = useState(0);
   const [isSuccessDetails, setIsSuccessDetails] = useState(false);
   const [isSuccessPWChange, setIsSuccessPWChange] = useState(false);
+
+  const dispatch = useDispatch();
+  const userLoggedIn = useSelector((state) => ({
+    user:state.user,
+    token: state.token,
+  }));
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -53,10 +57,10 @@ const Profile = () => {
   };
 
   const initialValuesDetails = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    contactNumber: contactNumber,
+    firstName: userLoggedIn.user.firstName,
+    lastName: userLoggedIn.user.lastName,
+    email: userLoggedIn.user.email,
+    contactNumber: userLoggedIn.user.contactNumber,
   };
 
   const initialValuesPasswordChange = {
@@ -96,7 +100,7 @@ const Profile = () => {
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
       <Grid item xs={12} sx={{ textAlign: "center" }}>
         <Typography variant="h4" color="primary">
-          Hi, {firstName}
+          Hi, {userLoggedIn.user.firstName}
         </Typography>
       </Grid>
       <Grid item xs={12}>

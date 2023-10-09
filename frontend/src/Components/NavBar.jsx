@@ -18,14 +18,19 @@ import { Login } from "@mui/icons-material";
 import Register from "../Pages/Register";
 import { Link as RouterLink } from "react-router-dom";
 import DefaultAvatar from "./DefaultAvatar";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../state";
 
 const NavBar = () => {
-  const firstName = "Alexandru";
-  const lastName = "Vieru";
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
+  const dispatch = useDispatch();
+  const userLoggedIn = useSelector((state) => ({
+    user:state.user,
+    token: state.token,
+  }));
+  console.log(userLoggedIn.user)
   const handleOpenNavMenu = (e) => {
     setAnchorElNav(e.currentTarget);
   };
@@ -40,9 +45,7 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+
 
   const pages = ["Services", "About", "Contact"];
   const settings = ["Profile", "Appointments", "Logout"];
@@ -152,11 +155,11 @@ const NavBar = () => {
               </RouterLink>
             ))}
           </Box>
-          {isLoggedIn ? (
+          {userLoggedIn.token !== null ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <DefaultAvatar firstName={firstName} lastName={lastName} />
+                  <DefaultAvatar firstName={userLoggedIn.user.firstName} lastName={userLoggedIn.user.lastName} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -177,7 +180,7 @@ const NavBar = () => {
               >
                 {settings.map((setting) =>
                   setting == "Logout" ? (
-                    <MenuItem key={setting} onClick={handleLogout}>
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography
                         component={RouterLink}
                         to={`/`}
@@ -186,6 +189,7 @@ const NavBar = () => {
                           color: "black",
                           textDecoration: "none",
                         }}
+                        onClick={() => dispatch(setLogout({user: null, token: null}))}
                       >
                         {setting}
                       </Typography>
