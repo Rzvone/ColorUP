@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private Long id;
     @NotNull
     private String firstName;
+    private String userName;
     @NotNull
     private String lastName;
     @NotNull

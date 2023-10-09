@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "providers")
-public class Provider {
+public class Provider extends User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
