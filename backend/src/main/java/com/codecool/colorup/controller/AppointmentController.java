@@ -30,8 +30,8 @@ public class AppointmentController {
     }
 
     @PostMapping(path = "/postAppointment/{userId}")
-    public ResponseEntity<String> addAppointment(@PathVariable Long userId,@RequestBody Appointment appointment){
-        appointmentService.addNewAppointment(userId,appointment);
+    public ResponseEntity<String> addAppointment(@PathVariable Long userId,@RequestBody AppointmentRequestDTO AppointmentRequest){
+        appointmentService.addNewAppointment(AppointmentRequest.getServiceIds(),AppointmentRequest.getProviderId(),userId,AppointmentRequest.getStart());
         return ResponseEntity.ok("Appointment added successfully. ");
     }
 }

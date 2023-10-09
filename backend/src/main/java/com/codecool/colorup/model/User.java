@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private Long id;
     @NotNull
     private String firstName;
+    private String userName;
     @NotNull
     private String lastName;
     @NotNull
@@ -40,8 +41,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Appointment> appointmentList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
