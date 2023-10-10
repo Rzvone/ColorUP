@@ -54,7 +54,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/reset-password")
+    @PutMapping("/reset-password")
     public ResponseEntity<AuthenticationResponse> resetPassword(@RequestBody ResetPasswordRequest request) throws MessagingException, UnsupportedEncodingException {
         String passwordResetToken = request.getPasswordResetToken();
         User user = validatePasswordResetToken(passwordResetToken);
