@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateResponse {
+public class UpdateService {
     private User updatedUser;
     private String message;
 

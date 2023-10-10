@@ -14,14 +14,21 @@ import { setLogin } from "../state";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
-  const [isSuccessDetails, setIsSuccessDetails] = useState(false);
-  const [isSuccessPWChange, setIsSuccessPWChange] = useState(false);
 
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => ({
     user: state.user,
     token: state.token,
   }));
+
+  const fetchUserData = () => {
+    fetch(`http://localhost:8080/users/getUser/${userLoggedIn.user.id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        dispatch(setLogin({ user: data, token: userLoggedIn.token }));
+      });
+  };
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -86,7 +93,6 @@ const Profile = () => {
   });
 
   const handleUpdateDetails = async (values, onSubmitProps) => {
-    // console.log(values);
     try {
       const response = await fetch(
         `http://localhost:8080/users/updateUser/${userLoggedIn.user.id}`,
@@ -94,7 +100,7 @@ const Profile = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${userLoggedIn.token}`, // Include the JWT token here
+            Authorization: `Bearer ${userLoggedIn.token}`,
           },
           body: JSON.stringify({
             firstName: values.firstName,
@@ -105,23 +111,12 @@ const Profile = () => {
         }
       );
 
-      const updatedUser = await response.json();
-      console.log(updatedUser)
-      // if (response.ok) {
-      //   // Handle success, e.g., update the UI with the updated user data.
-      //   console.log("User update successful:", updatedUser);
-      //   dispatch(
-      //     setLogin({
-      //       user: updatedUser,
-      //       token: userLoggedIn.token,
-      //     })
-      //   );
-      // } else {
-      //   // Handle errors, e.g., show an error message to the user.
-      //   console.error("User update failed:", response.statusText);
-      // }
+      if (response.ok) {
+        fetchUserData();
+      } else {
+        console.error("Failed to update details:", response.statusText);
+      }
     } catch (error) {
-      // Handle network errors or other exceptions.
       console.error("An error occurred:", error);
     }
   };
