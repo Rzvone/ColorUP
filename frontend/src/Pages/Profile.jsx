@@ -2,7 +2,7 @@ import { Grid, TextField, Typography, Button } from "@mui/material";
 import React from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -22,7 +22,6 @@ const Profile = () => {
     user:state.user,
     token: state.token,
   }));
-
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -64,7 +63,6 @@ const Profile = () => {
   };
 
   const initialValuesPasswordChange = {
-    oldPassword: "",
     password: "",
     confirmPassword: "",
   };
@@ -80,7 +78,6 @@ const Profile = () => {
   });
 
   const passwordChangeSchema = yup.object().shape({
-    oldPassword: yup.string().required("required"),
     password: yup.string().required("required"),
     confirmPassword: yup
       .string()
@@ -93,7 +90,30 @@ const Profile = () => {
   };
 
   const handlePasswordChange = async (values, onSubmitProps) => {
-    setIsSuccessPWChange(true);
+    console.log(values)
+    try {
+    const response = await fetch('http://localhost:8080/api/v1/auth/reset-password', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        passwordResetToken: userLoggedIn.token,
+        newPassword: values.password,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Password reset successful:', data);
+      alert('Password reset successful!');
+    } else {
+      console.error('Password reset failed:', response.statusText);
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    alert('An error occurred:', error)
+  }
   };
 
   return (
@@ -229,23 +249,6 @@ const Profile = () => {
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <Grid container spacing={4}>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Old Password"
-                          variant="outlined"
-                          type="password"
-                          name="oldPassword"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.oldPassword}
-                          error={
-                            Boolean(touched.oldPassword) &&
-                            Boolean(errors.oldPassword)
-                          }
-                          helperText={touched.oldPassword && errors.oldPassword}
-                        />
-                      </Grid>
                       <Grid item xs={12}>
                         <TextField
                           fullWidth
