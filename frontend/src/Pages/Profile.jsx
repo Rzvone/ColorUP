@@ -10,16 +10,16 @@ import Box from "@mui/material/Box";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { setLogin } from "../state";
 
 const Profile = () => {
-
   const [value, setValue] = useState(0);
   const [isSuccessDetails, setIsSuccessDetails] = useState(false);
   const [isSuccessPWChange, setIsSuccessPWChange] = useState(false);
 
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => ({
-    user:state.user,
+    user: state.user,
     token: state.token,
   }));
   function TabPanel(props) {
@@ -86,34 +86,74 @@ const Profile = () => {
   });
 
   const handleUpdateDetails = async (values, onSubmitProps) => {
-    setIsSuccessDetails(true);
+    // console.log(values);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/users/updateUser/${userLoggedIn.user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userLoggedIn.token}`, // Include the JWT token here
+          },
+          body: JSON.stringify({
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            contactNumber: values.contactNumber,
+          }),
+        }
+      );
+
+      const updatedUser = await response.json();
+      console.log(updatedUser)
+      // if (response.ok) {
+      //   // Handle success, e.g., update the UI with the updated user data.
+      //   console.log("User update successful:", updatedUser);
+      //   dispatch(
+      //     setLogin({
+      //       user: updatedUser,
+      //       token: userLoggedIn.token,
+      //     })
+      //   );
+      // } else {
+      //   // Handle errors, e.g., show an error message to the user.
+      //   console.error("User update failed:", response.statusText);
+      // }
+    } catch (error) {
+      // Handle network errors or other exceptions.
+      console.error("An error occurred:", error);
+    }
   };
 
   const handlePasswordChange = async (values, onSubmitProps) => {
-    console.log(values)
+    console.log(values);
     try {
-    const response = await fetch('http://localhost:8080/api/v1/auth/reset-password', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        passwordResetToken: userLoggedIn.token,
-        newPassword: values.password,
-      }),
-    });
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/reset-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            passwordResetToken: userLoggedIn.token,
+            newPassword: values.password,
+          }),
+        }
+      );
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Password reset successful:', data);
-      alert('Password reset successful!');
-    } else {
-      console.error('Password reset failed:', response.statusText);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Password reset successful:", data);
+        alert("Password reset successful!");
+      } else {
+        console.error("Password reset failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred:", error);
     }
-  } catch (error) {
-    console.error('An error occurred:', error);
-    alert('An error occurred:', error)
-  }
   };
 
   return (
@@ -280,7 +320,9 @@ const Profile = () => {
                             Boolean(touched.confirmPassword) &&
                             Boolean(errors.confirmPassword)
                           }
-                          helperText={touched.confirmPassword && errors.confirmPassword}
+                          helperText={
+                            touched.confirmPassword && errors.confirmPassword
+                          }
                         />
                       </Grid>
                       <Grid item xs={12}>

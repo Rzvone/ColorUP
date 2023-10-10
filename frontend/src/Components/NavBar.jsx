@@ -31,6 +31,7 @@ const NavBar = () => {
     token: state.token,
   }));
   console.log(userLoggedIn.user)
+  console.log(userLoggedIn.token)
   const handleOpenNavMenu = (e) => {
     setAnchorElNav(e.currentTarget);
   };
