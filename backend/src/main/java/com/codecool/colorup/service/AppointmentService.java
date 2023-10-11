@@ -47,17 +47,16 @@ public class AppointmentService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         // Create a list of ServiceProvided objects based on the given service IDs
+        List<ServiceProvided> providerServices = provider.getServicesProvided();
         List<ServiceProvided> services = new ArrayList<>();
         for (Long serviceId : serviceIds) {
-            ServiceProvided serviceProvided = new ServiceProvided();
-            // Retrieve and set service details based on serviceId if needed
-            services.add(serviceProvided);
+            services.add(providerServices.stream().filter(serviceProvided -> serviceProvided.getId().equals(serviceId)).findFirst().orElse(null));
         }
 
         // Create a new Appointment object and set its attributes
         Appointment appointment = new Appointment();
         appointment.setStartDate(start);
-        appointment.setEndDate(start.plusDays(1)); // Assuming appointments last for 1 day
+        appointment.setEndDate(start.plusMinutes(services.stream().mapToLong(ServiceProvided::getDuration).sum()));
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setProvider(provider);
         appointment.setCustomer(customer);

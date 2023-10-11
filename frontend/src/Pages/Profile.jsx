@@ -170,6 +170,12 @@ const Profile = () => {
     }
   };
 
+  const handleProviderRequest = async (id)=>{
+    const response = await fetch(`http://localhost:8080/users/makeProvider/${id}`,{
+      method:"PUT",
+      
+    })
+  }
   return (
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
       <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -282,7 +288,18 @@ const Profile = () => {
                         >
                           Update Details
                         </Button>
+                        
                       </Grid>
+                      {userLoggedIn.user.role==="VISITOR"&&
+                      <Grid item xs={12} sx={{ textAlign: "center" }}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          type="submit"
+                        >
+                          Request provider
+                        </Button>
+                      </Grid>}
                     </Grid>
                   </form>
                 )}
@@ -357,10 +374,12 @@ const Profile = () => {
                 )}
               </Formik>
             </TabPanel>
+      
           </Box>
         </Box>
       </Grid>
     </Grid>
+    
   );
 };
 

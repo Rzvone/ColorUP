@@ -1,5 +1,6 @@
 package com.codecool.colorup.config;
 
+import com.codecool.colorup.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +30,10 @@ public class SecurityConfiguration {
                         auth
                                 .requestMatchers("/api/v1/auth/**")
                                 .permitAll()
-//                                .requestMatchers("/appointment").hasRole("VISITOR")
+                                .requestMatchers("/appointment").hasRole("VISITOR")
                                 .requestMatchers("/users/**")
                                 .permitAll()
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

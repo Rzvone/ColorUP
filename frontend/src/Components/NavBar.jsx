@@ -16,7 +16,8 @@ import colorUpLogo from "../logo100px.png";
 import About from "./About";
 import { Login } from "@mui/icons-material";
 import Register from "../Pages/Register";
-import { Link as RouterLink } from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "./DefaultAvatar";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -32,6 +33,7 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userLoggedIn = useSelector((state) => ({
     user: state.user,
     token: state.token,
@@ -254,14 +256,15 @@ const NavBar = () => {
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography
                         component={RouterLink}
-                        to={`/`}
+                        to={`/authentication`}
                         sx={{
                           textAlign: "center",
                           color: "black",
                           textDecoration: "none",
                         }}
-                        onClick={() =>
+                        onClick={() =>{
                           dispatch(setLogout({ user: null, token: null }))
+                        }
                         }
                       >
                         {setting}

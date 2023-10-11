@@ -1,6 +1,7 @@
 package com.codecool.colorup.enums;
 
 public enum Role {
-    ADMIN,
-    VISITOR;
+    ROLE_ADMIN,
+    ROLE_VISITOR,
+    ROLE_PROVIDER
 }

@@ -56,4 +56,12 @@ public class UserService {
 
     }
 
+    public void makeProvider(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found."));
+        user.setProviderRequest(!user.isProviderRequest());
+        userRepository.save(user);
+    }
+    public List<User> getPendingProviders(){
+        return userRepository.findAll().stream().filter(User::isProviderRequest).toList();
+    }
 }

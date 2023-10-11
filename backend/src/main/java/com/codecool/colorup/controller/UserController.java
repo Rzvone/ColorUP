@@ -4,6 +4,7 @@ import com.codecool.colorup.config.JwtService;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.service.UserService;
 import io.jsonwebtoken.Claims;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,11 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
+    @PutMapping("/makeProvider/{id}")
+    public ResponseEntity<String> makeProvider(@PathVariable Long id) {
+        userService.makeProvider(id);
+        return ResponseEntity.ok("Request successful!");
+    }
     @GetMapping("/getAllUsers")
     public List<User> getUser() {
         return userService.getUsers();
@@ -59,8 +65,6 @@ public class UserController {
 
         return ResponseEntity.ok("User updated successfully!");
     }
-
-
     @DeleteMapping(path = "/deleteUser/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

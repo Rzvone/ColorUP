@@ -28,6 +28,9 @@ public class Appointment {
     private AppointmentStatus status;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

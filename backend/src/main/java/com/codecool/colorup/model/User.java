@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @DynamicUpdate
 @DynamicInsert
-@Getter
-@Setter
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "Users")
 public class User implements UserDetails {
     @Id
@@ -37,10 +38,12 @@ public class User implements UserDetails {
     @NotNull
     private String password;
     private String contactNumber;
-
+    private boolean providerRequest;
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Appointment> appointments = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
