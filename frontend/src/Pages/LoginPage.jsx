@@ -84,21 +84,21 @@ const LoginPage = () => {
     password: "",
   };
 
-  const fetchUserData = () => {
-    fetch('http://localhost:8080/users/getAllUsers')
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data);
-      });
-  };
+  // const fetchUserData = () => {
+  //   fetch('http://localhost:8080/users/getAllUsers')
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setUsers(data);
+  //     });
+  // };
   
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  // useEffect(() => {
+  //   fetchUserData();
+  // }, []);
   
-  useEffect(() => {
-    console.log(users); // This will log the updated users state
-  }, [users]);
+  // useEffect(() => {
+  //   console.log(users); // This will log the updated users state
+  // }, [users]);
 
   const handleRegistration = async (values, onSubmitProps) => {
     try {

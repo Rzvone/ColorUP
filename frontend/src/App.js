@@ -17,7 +17,8 @@ import Profile from './Pages/Profile';
 import Contact from './Components/Contact';
 
 function App() {
-  const theme = createTheme(themeSettings('light'))
+  const mode = useSelector(state=>state.mode)
+  const theme = createTheme(themeSettings(mode))
   
   return (
     <div>

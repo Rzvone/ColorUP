@@ -11,9 +11,27 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
+import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import FilledInput from "@mui/material/FilledInput";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => ({
@@ -113,6 +131,7 @@ const Profile = () => {
 
       if (response.ok) {
         fetchUserData();
+        alert("Account details updated successfully!");
       } else {
         console.error("Failed to update details:", response.statusText);
       }
@@ -155,7 +174,10 @@ const Profile = () => {
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
       <Grid item xs={12} sx={{ textAlign: "center" }}>
         <Typography variant="h4" color="primary">
-          Hi, {userLoggedIn.user.firstName}
+          Hello,
+        </Typography>
+        <Typography variant="h4" color="secondary">
+          {userLoggedIn.user.firstName}
         </Typography>
       </Grid>
       <Grid item xs={12}>
