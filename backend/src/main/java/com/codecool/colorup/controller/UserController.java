@@ -27,9 +27,8 @@ public class UserController {
     }
 
     @PutMapping("/makeProvider/{id}")
-    public ResponseEntity<String> makeProvider(@PathVariable Long id) {
-        userService.makeProvider(id);
-        return ResponseEntity.ok("Request successful!");
+    public User makeProvider(@PathVariable Long id) {
+        return userService.makeProvider(id);
     }
     @GetMapping("/getAllUsers")
     public List<User> getUser() {
