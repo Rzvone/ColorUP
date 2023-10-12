@@ -17,6 +17,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -32,7 +33,7 @@ public class UserService {
 
     public String addNewUser(User user) {
         Optional<User> userOptional = userRepository
-                .findUserByEmail(user.getEmail());
+                .findByEmail(user.getEmail());
         if (userOptional.isPresent()) {
             return "Account already exist. Please choose another one. ";
         }
@@ -42,8 +43,9 @@ public class UserService {
 
     @Modifying
     @Transactional
-    public User updateUser(Long id, User updatedUser) throws Exception {
-        userRepository.findById(id).orElseThrow(()->new Exception ("ID Not found " + id));
+    public User updateUser(Long id, User updatedUser){
+//        userRepository.findById(id).orElseThrow(()->new Exception ("ID Not found " + id));
+        userRepository.findById(id).orElse(null);
 //        }
         updatedUser.setId(id);
         return userRepository.save(updatedUser);
@@ -52,5 +54,15 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
 
+    }
+
+    public User makeProvider(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found."));
+        user.setProviderRequest(!user.isProviderRequest());
+        userRepository.save(user);
+        return user;
+    }
+    public List<User> getPendingProviders(){
+        return userRepository.findAll().stream().filter(User::isProviderRequest).toList();
     }
 }
