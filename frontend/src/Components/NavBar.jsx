@@ -55,7 +55,12 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["Services", "About", "Contact"];
+  const pages = userLoggedIn?.user?.role === null
+  ? ["Services", "About", "Contact"]
+  : userLoggedIn?.user?.role === "ROLE_ADMIN"
+  ? ["Create product"]
+  : ["Services", "About", "Contact"];
+
   const settings = ["Profile", "Appointments", "Logout"];
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -203,7 +208,7 @@ const NavBar = () => {
             {pages.map((page) => (
               <RouterLink
                 key={page}
-                to={`/${page.toLowerCase()}`}
+                to={page.split(" ").length===1?`/${page.toLowerCase()}`:`${page.split(" ").join("-").toLowerCase()}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Button

@@ -1,13 +1,19 @@
 package com.codecool.colorup.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import java.util.Objects;
 
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -23,9 +29,13 @@ public class Product {
     @Column(name = "product_category", nullable = false)
     private String category;
 
+    @Column(name = "product_description", nullable = false)
+    private String description;
+
     @Column(name = "product_price", nullable = false)
     @Min(value = 0, message = "Price must be positive")
     private Double price;
+
 
 
     @Override
