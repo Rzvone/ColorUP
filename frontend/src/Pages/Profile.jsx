@@ -21,7 +21,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { CollectionsBookmarkOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
@@ -173,8 +173,13 @@ const Profile = () => {
   const handleProviderRequest = async (id)=>{
     const response = await fetch(`http://localhost:8080/users/makeProvider/${id}`,{
       method:"PUT",
-      
+      headers:{
+        "Content-Type" : "application/json",
+        "Authorization" : `Bearer ${userLoggedIn.token}`
+      }
     })
+    const res = await response.json()
+    dispatch(setLogin({...userLoggedIn,user:res}))
   }
   return (
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
@@ -290,20 +295,34 @@ const Profile = () => {
                         </Button>
                         
                       </Grid>
-                      {userLoggedIn.user.role==="VISITOR"&&
-                      <Grid item xs={12} sx={{ textAlign: "center" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          type="submit"
-                        >
-                          Request provider
-                        </Button>
-                      </Grid>}
+                      
                     </Grid>
                   </form>
                 )}
               </Formik>
+              {userLoggedIn.user.role==="ROLE_VISITOR"&&
+              !userLoggedIn.user.providerRequest?
+                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          type="button"
+                          onClick={()=>handleProviderRequest(userLoggedIn.user.id)}
+                        >
+                          Request provider
+                        </Button>
+                      </Grid>:
+                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        type="button"
+                        onClick={()=>handleProviderRequest(userLoggedIn.user.id)}
+                      >
+                        Cancel Request provider
+                      </Button>
+                    </Grid>
+                      }
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Formik
