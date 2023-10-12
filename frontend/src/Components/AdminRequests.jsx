@@ -52,7 +52,7 @@ const AdminRequests = () => {
         console.error("Failed to update details:", response.statusText);
       }
     } catch (error) {
-        console.error("An error occurred:", error);
+      console.error("An error occurred:", error);
     }
   };
 
@@ -92,7 +92,7 @@ const AdminRequests = () => {
             <Button
               variant="contained"
               sx={{ margin: "1rem" }}
-              onClick={handleAcceptClick(user,)}
+              onClick={() => handleAcceptClick(user)}
             >
               Accept
             </Button>

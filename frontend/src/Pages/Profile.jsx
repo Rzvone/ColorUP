@@ -11,6 +11,11 @@ import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { Field, ErrorMessage } from "formik";
+
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
 import FilledInput from "@mui/material/FilledInput";
@@ -21,7 +26,11 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { CollectionsBookmarkOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import {
+  CollectionsBookmarkOutlined,
+  VisibilityOffOutlined,
+  VisibilityOutlined,
+} from "@mui/icons-material";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
@@ -163,17 +172,21 @@ const Profile = () => {
     }
   };
 
-  const handleProviderRequest = async (id)=>{
-    const response = await fetch(`http://localhost:8080/users/makeProvider/${id}`,{
-      method:"PUT",
-      headers:{
-        "Content-Type" : "application/json",
-        "Authorization" : `Bearer ${userLoggedIn.token}`
+  const handleProviderRequest = async (values) => {
+    console.log(values.user.id)
+    const response = await fetch(
+      `http://localhost:8080/users/makeProvider/${values.user.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userLoggedIn.token}`,
+        },
       }
-    })
-    const res = await response.json()
-    dispatch(setLogin({...userLoggedIn,user:res}))
-  }
+    );
+    const res = await response.json();
+    dispatch(setLogin({ ...userLoggedIn, user: res }));
+  };
   return (
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
       <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -193,9 +206,11 @@ const Profile = () => {
               value={value}
               onChange={handleChange}
               aria-label="basic tabs example"
+              variant="scrollable"
             >
               <Tab label="Account Details" {...a11yProps(0)} />
               <Tab label="Password Change" {...a11yProps(1)} />
+              <Tab label="Request to become a provider" {...a11yProps(2)} />
             </Tabs>
             <TabPanel value={value} index={0}>
               <Formik
@@ -286,36 +301,11 @@ const Profile = () => {
                         >
                           Update Details
                         </Button>
-                        
                       </Grid>
-                      
                     </Grid>
                   </form>
                 )}
               </Formik>
-              {userLoggedIn.user.role==="ROLE_VISITOR"&&
-              (!userLoggedIn.user.providerRequest?
-                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          type="button"
-                          onClick={()=>handleProviderRequest(userLoggedIn.user.id)}
-                        >
-                          Request provider
-                        </Button>
-                      </Grid>:
-                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        type="button"
-                        onClick={()=>handleProviderRequest(userLoggedIn.user.id)}
-                      >
-                        Cancel Request provider
-                      </Button>
-                    </Grid>)
-                      }
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Formik
@@ -386,12 +376,119 @@ const Profile = () => {
                 )}
               </Formik>
             </TabPanel>
-      
+            <TabPanel value={value} index={2}>
+              {userLoggedIn.user.role === "ROLE_VISITOR" &&
+                (!userLoggedIn.user.providerRequest ? (
+                  <Formik
+                    initialValues={{
+                      user: userLoggedIn.user,
+                      services: {
+                        nails: false,
+                        lashes: false,
+                        manicure: false,
+                      },
+                    }}
+                    onSubmit={handleProviderRequest}
+                  >
+                    {({ values, handleSubmit, setFieldValue }) => (
+                      <form onSubmit={handleSubmit}>
+                        <Grid container spacing={4}>
+                          <Grid item xs={12} sx={{ textAlign: "center" }}>
+                            <Typography variant="h6">
+                              Please check the services you can provide from the
+                              list below:
+                            </Typography>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={12}
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <FormGroup>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={values.services.nails}
+                                    onChange={(e) =>
+                                      setFieldValue(
+                                        "services.nails",
+                                        e.target.checked
+                                      )
+                                    }
+                                  />
+                                }
+                                label="Nails"
+                              />
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={values.services.lashes}
+                                    onChange={(e) =>
+                                      setFieldValue(
+                                        "services.lashes",
+                                        e.target.checked
+                                      )
+                                    }
+                                  />
+                                }
+                                label="Lashes"
+                              />
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={values.services.manicure}
+                                    onChange={(e) =>
+                                      setFieldValue(
+                                        "services.manicure",
+                                        e.target.checked
+                                      )
+                                    }
+                                  />
+                                }
+                                label="Manicure"
+                              />
+                            </FormGroup>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={12}
+                            sx={{ textAlign: "center", marginTop: "1rem" }}
+                          >
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              type="submit"
+                            >
+                              Request provider
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </form>
+                    )}
+                  </Formik>
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ textAlign: "center", marginTop: "1rem" }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      type="button"
+                      onClick={() =>
+                        handleProviderRequest(userLoggedIn.user.id)
+                      }
+                    >
+                      Cancel Request provider
+                    </Button>
+                  </Grid>
+                ))}
+            </TabPanel>
           </Box>
         </Box>
       </Grid>
     </Grid>
-    
   );
 };
 
