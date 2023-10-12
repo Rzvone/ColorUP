@@ -25,13 +25,6 @@ import { CollectionsBookmarkOutlined, VisibilityOffOutlined, VisibilityOutlined 
 
 const Profile = () => {
   const [value, setValue] = useState(0);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   const dispatch = useDispatch();
   const userLoggedIn = useSelector((state) => ({
@@ -301,7 +294,7 @@ const Profile = () => {
                 )}
               </Formik>
               {userLoggedIn.user.role==="ROLE_VISITOR"&&
-              !userLoggedIn.user.providerRequest?
+              (!userLoggedIn.user.providerRequest?
                       <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
                         <Button
                           variant="outlined"
@@ -321,7 +314,7 @@ const Profile = () => {
                       >
                         Cancel Request provider
                       </Button>
-                    </Grid>
+                    </Grid>)
                       }
             </TabPanel>
             <TabPanel value={value} index={1}>

@@ -6,7 +6,7 @@ const HomePage = () =>{
 
 const user = useSelector(state=>state.user)
 return<>
-{user.role === "ROLE_ADMIN"?<AdminRequests/>:<Visitor/>}
+{user!==null && user.role === "ROLE_ADMIN"?<AdminRequests/>:<Visitor/>}
 </>
 }
 
