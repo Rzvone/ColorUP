@@ -59,7 +59,7 @@ const NavBar = () => {
   ? ["Services", "About", "Contact"]
   : userLoggedIn?.user?.role === "ROLE_ADMIN"
   ? ["Create product"]
-  : ["Services", "About", "Contact", "Products"];
+  : ["Services", "About", "Contact", "Products", "Stylists"];
 
   const settings = ["Profile", "Appointments", "Logout"];
 

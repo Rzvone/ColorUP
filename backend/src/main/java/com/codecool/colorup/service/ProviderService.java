@@ -4,7 +4,6 @@ import com.codecool.colorup.enums.Role;
 import com.codecool.colorup.model.Provider;
 import com.codecool.colorup.model.ServiceProvided;
 import com.codecool.colorup.model.User;
-import com.codecool.colorup.repository.CustomerRepository;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
 import org.slf4j.Logger;
@@ -18,17 +17,16 @@ import java.util.List;
 public class ProviderService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository repository;
-    private final CustomerRepository customerRepository;
     private final ProviderRepository providerRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ProviderService(UserRepository repository, CustomerRepository customerRepository, ProviderRepository providerRepository, PasswordEncoder passwordEncoder) {
+    public ProviderService(UserRepository repository, ProviderRepository providerRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
-        this.customerRepository = customerRepository;
         this.providerRepository = providerRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    public List<Provider> getProviders(){return providerRepository.findAll();}
     public void MakeUserProvider(User user, List<ServiceProvided> services){
         try {
             Provider provider = new Provider();

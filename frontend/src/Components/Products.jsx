@@ -28,10 +28,12 @@ return <Box sx={{margin:'3rem'}}>
         <Typography variant="body2" color="text.secondary">
           {product.product.description}
         </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {product.product.price}$
+        </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        <Button size="small">Add to cart</Button>
       </CardActions>
     </Card>
     </Grid>

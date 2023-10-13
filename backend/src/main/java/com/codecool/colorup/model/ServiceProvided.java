@@ -1,5 +1,6 @@
 package com.codecool.colorup.model;
 
+import com.codecool.colorup.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,7 +13,8 @@ public class ServiceProvided {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Other attributes specific to ServiceProvided
+    @Enumerated(EnumType.STRING)
+    private ServiceType serviceType;
 
     @ManyToOne
     @JoinColumn(name = "appointment_id") // This should match the actual column name in your database
