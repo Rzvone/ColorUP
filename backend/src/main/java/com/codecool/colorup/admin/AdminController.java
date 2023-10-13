@@ -59,11 +59,12 @@ public List<User> getPendingProviders(){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
-    private final String UPLOAD_DIRECTORY = "C:/Users/raduz/CodecoolJava/ColorUp/backend/src/main/resources/images";
+    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/backend/src/main/resources/images";
 
 
     @PostMapping("/createProduct")
     public String createProduct(@RequestParam("image") MultipartFile file, @ModelAttribute ProductDTO productDTO, Model model) throws IOException {
+        System.out.println(UPLOAD_DIRECTORY);
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());

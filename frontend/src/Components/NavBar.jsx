@@ -59,7 +59,7 @@ const NavBar = () => {
   ? ["Services", "About", "Contact"]
   : userLoggedIn?.user?.role === "ROLE_ADMIN"
   ? ["Create product"]
-  : ["Services", "About", "Contact"];
+  : ["Services", "About", "Contact", "Products"];
 
   const settings = ["Profile", "Appointments", "Logout"];
 
@@ -257,7 +257,7 @@ const NavBar = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) =>
-                  setting == "Logout" ? (
+                  setting === "Logout" ? (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography
                         component={RouterLink}

@@ -17,6 +17,7 @@ import ForgotPassword from './Pages/ForgotPassword';
 import Profile from './Pages/Profile';
 import Contact from './Components/Contact';
 import CreateProductPage from './Pages/CreateProductPage';
+import ProductsPage from './Pages/ProductsPage';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -36,6 +37,7 @@ function App() {
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/profile' element={<Profile />} />
             <Route path = '/create-product' element={<CreateProductPage/>}/>
+            <Route path ="/products" element = {<ProductsPage/>}/>
           </Routes>
       </ThemeProvider>
     </div>
