@@ -140,7 +140,7 @@ const LoginPage = () => {
     if (res.token) {
       dispatch(
         setLogin({
-          user: res.user,
+          user: {...res.user, image:res.image},
           token: res.token,
         })
       );

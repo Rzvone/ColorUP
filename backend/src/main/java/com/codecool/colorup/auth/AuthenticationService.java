@@ -8,6 +8,7 @@ import com.codecool.colorup.forgotpassword.password.ForgotPasswordRequest;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
+import com.codecool.colorup.service.UserService;
 import jakarta.mail.MessagingException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     private RegistrationMailSender mailSender;
 
     public AuthenticationResponse register(RegisterRequest request){
@@ -60,7 +62,8 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).user(user).build();
+        byte [] image = userService.loadImageForUser(user);
+        return AuthenticationResponse.builder().token(jwtToken).user(user).image(userService.imageToDataUrl(image)).build();
     }
 
     public void forgotPassword(ForgotPasswordRequest request) throws MessagingException, UnsupportedEncodingException {

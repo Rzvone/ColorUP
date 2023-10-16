@@ -44,7 +44,7 @@ const Profile = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        dispatch(setLogin({ user: data, token: userLoggedIn.token }));
+        dispatch(setLogin({ user: {...data.user,image:data.image}, token: userLoggedIn.token }));
       });
   };
   function TabPanel(props) {
@@ -85,11 +85,12 @@ const Profile = () => {
     lastName: userLoggedIn.user.lastName,
     email: userLoggedIn.user.email,
     contactNumber: userLoggedIn.user.contactNumber,
+    image:null
   };
 
   const initialValuesPasswordChange = {
     password: "",
-    confirmPassword: "",
+    confirmPassword: ""
   };
 
   const detailsSchema = yup.object().shape({
@@ -100,6 +101,20 @@ const Profile = () => {
       .string()
       .required("required")
       .matches(/^\d+$/, "Contact number must contain only digits"),
+    image: yup
+      .mixed()
+      .test("fileSize", "File size is too large", (value) => {
+        if (value) {
+          return value.size <= 1024 * 1024; // 1 MB (adjust the size limit as needed)
+        }
+        return true; // If no file is selected, it's considered valid
+      })
+      .test("fileType", "Unsupported file type", (value) => {
+        if (value) {
+          return value.type.startsWith("image/"); // Only allow image files
+        }
+        return true; // If no file is selected, it's considered valid
+      }),
   });
 
   const passwordChangeSchema = yup.object().shape({
@@ -111,21 +126,19 @@ const Profile = () => {
   });
 
   const handleUpdateDetails = async (values, onSubmitProps) => {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key,value])=>{
+      formData.append(`${key}`, value)
+    })
     try {
       const response = await fetch(
         `http://localhost:8080/users/updateUser/${userLoggedIn.user.id}`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${userLoggedIn.token}`,
           },
-          body: JSON.stringify({
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            contactNumber: values.contactNumber,
-          }),
+          body: formData
         }
       );
 
@@ -284,6 +297,15 @@ const Profile = () => {
                             touched.contactNumber && errors.contactNumber
                           }
                         />
+                      </Grid>
+                      <Grid item xs={12}>
+                      <label>Add profile picture: </label>
+                      <input 
+                      id="image"
+                      name="image"
+                      type="file"
+                      onBlur={handleBlur}
+                      onChange={(event) => setFieldValue("image", event.currentTarget.files[0])}/>
                       </Grid>
                       <Grid item xs={12} sx={{ textAlign: "center" }}>
                         <Button

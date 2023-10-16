@@ -12,6 +12,7 @@ public class AuthenticationResponse {
     private String token;
     private User user;
     private String message;
+    private String image;
 
     public AuthenticationResponse(String message) {
         this.message = message;

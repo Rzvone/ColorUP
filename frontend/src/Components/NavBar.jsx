@@ -234,10 +234,13 @@ const NavBar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  {userLoggedIn.user.image!=null?
+                  <Avatar src={userLoggedIn.user.image}></Avatar>:
                   <DefaultAvatar
-                    firstName={userLoggedIn.user.firstName}
-                    lastName={userLoggedIn.user.lastName}
-                  />
+                  firstName={userLoggedIn.user.firstName}
+                  lastName={userLoggedIn.user.lastName}
+                />  
+                }
                 </IconButton>
               </Tooltip>
               <Menu
