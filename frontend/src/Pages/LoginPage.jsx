@@ -53,13 +53,19 @@ const LoginPage = () => {
   };
 
   const registerSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
+    firstName: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "First name must contain only characters")
+      .required("required"),
+    lastName: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Last name must contain only characters")
+      .required("required"),
     email: yup.string().email("Invalid Email").required("required"),
     contactNumber: yup
       .string()
       .required("required")
-      .matches(/^\d+$/, "Contact number must contain only digits"),
+      .matches(/^\d{10}$/, "Please enter a valid phone number!"),
     password: yup.string().required("required"),
     confirmPassword: yup
       .string()
@@ -91,23 +97,26 @@ const LoginPage = () => {
   //       setUsers(data);
   //     });
   // };
-  
+
   // useEffect(() => {
   //   fetchUserData();
   // }, []);
-  
+
   // useEffect(() => {
   //   console.log(users); // This will log the updated users state
   // }, [users]);
 
   const handleRegistration = async (values, onSubmitProps) => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-  
+      const response = await fetch(
+        "http://localhost:8080/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
+
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);

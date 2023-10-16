@@ -14,23 +14,7 @@ import { setLogin } from "../state";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Field, ErrorMessage } from "formik";
-
-import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import {
-  CollectionsBookmarkOutlined,
-  VisibilityOffOutlined,
-  VisibilityOutlined,
-} from "@mui/icons-material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const Profile = () => {
   const [value, setValue] = useState(0);
@@ -95,13 +79,19 @@ const Profile = () => {
   };
 
   const detailsSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
+    firstName: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "First name must contain only characters")
+      .required("required"),
+    lastName: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Last name must contain only characters")
+      .required("required"),
     email: yup.string().email("Invalid Email").required("required"),
     contactNumber: yup
       .string()
       .required("required")
-      .matches(/^\d+$/, "Contact number must contain only digits"),
+      .matches(/^\d{10}$/, "Please enter a valid phone number!"),
   });
 
   const passwordChangeSchema = yup.object().shape({
@@ -172,10 +162,9 @@ const Profile = () => {
     }
   };
 
-  const handleProviderRequest = async (values) => {
-    console.log(values.user.id)
+  const handleProviderRequestCancel = async (id) => {
     const response = await fetch(
-      `http://localhost:8080/users/makeProvider/${values.user.id}`,
+      `http://localhost:8080/users/makeProvider/${id}`,
       {
         method: "PUT",
         headers: {
@@ -187,6 +176,7 @@ const Profile = () => {
     const res = await response.json();
     dispatch(setLogin({ ...userLoggedIn, user: res }));
   };
+
   return (
     <Grid container spacing={4} sx={{ marginTop: "2rem" }}>
       <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -263,7 +253,7 @@ const Profile = () => {
                       <Grid item xs={12} sm={6}>
                         <TextField
                           disabled
-                          sx={{ minWidth: "243px" }}
+                          // sx={{ minWidth: "243px" }}
                           label="E-mail address"
                           variant="outlined"
                           name="email"
@@ -379,109 +369,78 @@ const Profile = () => {
             <TabPanel value={value} index={2}>
               {userLoggedIn.user.role === "ROLE_VISITOR" &&
                 (!userLoggedIn.user.providerRequest ? (
-                  <Formik
-                    initialValues={{
-                      user: userLoggedIn.user,
-                      services: {
-                        nails: false,
-                        lashes: false,
-                        manicure: false,
-                      },
-                    }}
-                    onSubmit={handleProviderRequest}
-                  >
-                    {({ values, handleSubmit, setFieldValue }) => (
-                      <form onSubmit={handleSubmit}>
-                        <Grid container spacing={4}>
-                          <Grid item xs={12} sx={{ textAlign: "center" }}>
-                            <Typography variant="h6">
-                              Please check the services you can provide from the
-                              list below:
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={12}
-                            sx={{ display: "flex", alignItems: "center" }}
-                          >
-                            <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={values.services.nails}
-                                    onChange={(e) =>
-                                      setFieldValue(
-                                        "services.nails",
-                                        e.target.checked
-                                      )
-                                    }
-                                  />
-                                }
-                                label="Nails"
-                              />
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={values.services.lashes}
-                                    onChange={(e) =>
-                                      setFieldValue(
-                                        "services.lashes",
-                                        e.target.checked
-                                      )
-                                    }
-                                  />
-                                }
-                                label="Lashes"
-                              />
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={values.services.manicure}
-                                    onChange={(e) =>
-                                      setFieldValue(
-                                        "services.manicure",
-                                        e.target.checked
-                                      )
-                                    }
-                                  />
-                                }
-                                label="Manicure"
-                              />
-                            </FormGroup>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={12}
-                            sx={{ textAlign: "center", marginTop: "1rem" }}
-                          >
-                            <Button
-                              variant="outlined"
-                              color="primary"
-                              type="submit"
-                            >
-                              Request provider
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </form>
-                    )}
-                  </Formik>
-                ) : (
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ textAlign: "center", marginTop: "1rem" }}
-                  >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      type="button"
-                      onClick={() =>
-                        handleProviderRequest(userLoggedIn.user.id)
-                      }
+                  <Grid container spacing={4}>
+                    <Grid item xs={12} sx={{ textAlign: "center" }}>
+                      <Typography variant="h4">
+                        Willing to join our team ?
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ textAlign: "center" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ textAlign: "center", margin: "20px" }}
+                      >
+                        Click the button below and one member of our team will
+                        contact you regarding additional details!
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{ textAlign: "center", marginTop: "1rem" }}
                     >
-                      Cancel Request provider
-                    </Button>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        type="button"
+                        onClick={() =>
+                          handleProviderRequestCancel(userLoggedIn.user.id)
+                        }
+                      >
+                        Request provider
+                      </Button>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid container spacing={2} sx={{ marginTop: "3rem" }}>
+                    <Grid item xs={12} sx={{ textAlign: "center" }}>
+                      <Typography variant="h4">
+                        You have completed the application!
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{ textAlign: "center", marginTop: ".7rem" }}
+                    >
+                      <CheckCircleIcon color="secondary" fontSize="large" />
+                    </Grid>
+                    <Grid item xs={12} sx={{ textAlign: "center" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{ textAlign: "center", margin: "20px" }}
+                      >
+                        Please wait for a response from our team, we'll get back
+                        to you via email or by calling you on the contact number
+                        provided.
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{ textAlign: "center", marginTop: "1rem" }}
+                    >
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        type="button"
+                        onClick={() =>
+                          handleProviderRequestCancel(userLoggedIn.user.id)
+                        }
+                      >
+                        Cancel provider Request
+                      </Button>
+                    </Grid>
                   </Grid>
                 ))}
             </TabPanel>
