@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "Users")
 public class User implements UserDetails {
@@ -42,7 +42,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "user")
     private List<Appointment> appointments = new ArrayList<>();
 
     @Override

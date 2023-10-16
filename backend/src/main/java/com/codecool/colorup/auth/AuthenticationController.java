@@ -5,6 +5,7 @@ import com.codecool.colorup.forgotpassword.password.ForgotPasswordRequest;
 import com.codecool.colorup.forgotpassword.password.ResetPasswordRequest;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.repository.UserRepository;
+import com.codecool.colorup.service.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class AuthenticationController {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
     private final JwtService jwtService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -60,9 +62,9 @@ public class AuthenticationController {
         User user = validatePasswordResetToken(passwordResetToken);
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         repository.save(user);
-
+        byte [] image = userService.loadImageForUser(user);
         // Send a success response to the client.
-        return ResponseEntity.ok(new AuthenticationResponse(jwtService.generateToken(user),user,"Success"));
+        return ResponseEntity.ok(new AuthenticationResponse(jwtService.generateToken(user),user,"Success",userService.imageToDataUrl(image)));
     }
 
     private User validatePasswordResetToken(String token) {

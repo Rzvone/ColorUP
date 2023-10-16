@@ -55,7 +55,12 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
-  const pages = ["Services", "About", "Contact"];
+  const pages = userLoggedIn?.user?.role === null
+  ? ["Services", "About", "Contact"]
+  : userLoggedIn?.user?.role === "ROLE_ADMIN"
+  ? ["Create product"]
+  : ["Services", "About", "Contact", "Products", "Stylists"];
+
   const settings = ["Profile", "Appointments", "Logout"];
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -203,7 +208,7 @@ const NavBar = () => {
             {pages.map((page) => (
               <RouterLink
                 key={page}
-                to={`/${page.toLowerCase()}`}
+                to={page.split(" ").length===1?`/${page.toLowerCase()}`:`${page.split(" ").join("-").toLowerCase()}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Button
@@ -229,10 +234,13 @@ const NavBar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  {userLoggedIn.user.image!=null?
+                  <Avatar src={userLoggedIn.user.image}></Avatar>:
                   <DefaultAvatar
-                    firstName={userLoggedIn.user.firstName}
-                    lastName={userLoggedIn.user.lastName}
-                  />
+                  firstName={userLoggedIn.user.firstName}
+                  lastName={userLoggedIn.user.lastName}
+                />  
+                }
                 </IconButton>
               </Tooltip>
               <Menu
@@ -252,7 +260,7 @@ const NavBar = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) =>
-                  setting == "Logout" ? (
+                  setting === "Logout" ? (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography
                         component={RouterLink}

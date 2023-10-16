@@ -7,8 +7,11 @@ import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,13 +34,15 @@ public class UserController {
         return userService.makeProvider(id);
     }
     @GetMapping("/getAllUsers")
-    public List<User> getUser() {
+    public List<UserResponse> getUser() {
         return userService.getUsers();
     }
 
     @GetMapping("/getUser/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public UserResponse getUser(@PathVariable Long id) {
+        User user =  userService.getUserById(id);
+        byte [] image = userService.loadImageForUser(user);
+        return new UserResponse(user,userService.imageToDataUrl(image));
     }
 
     @PostMapping("/postUser")
@@ -45,24 +50,19 @@ public class UserController {
         return ResponseEntity.ok(userService.addNewUser(user));
     }
 
-    @PutMapping(path = "/updateUser/{id}")
-    public ResponseEntity<?> updateUser(
+    @PutMapping(path = "/updateUser/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updateUser(
             @PathVariable Long id,
-            @RequestBody User updatedUser
+            @RequestParam("image") MultipartFile file,
+            @ModelAttribute User user,
+            Model model
     ) {
-        User userToUpdate = userService.getUserById(id);
-        if (userToUpdate == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        try {
+            userService.updateUser(id, file, user);
+            return ResponseEntity.ok("User updated successfully with ID: " + user.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User update failed: " + e.getMessage());
         }
-
-        userToUpdate.setFirstName(updatedUser.getFirstName());
-        userToUpdate.setLastName(updatedUser.getLastName());
-        userToUpdate.setEmail(updatedUser.getEmail());
-        userToUpdate.setContactNumber(updatedUser.getContactNumber());
-
-        userService.updateUser(id, userToUpdate);
-
-        return ResponseEntity.ok("User updated successfully!");
     }
     @DeleteMapping(path = "/deleteUser/{id}")
     public void deleteUser(@PathVariable Long id) {

@@ -16,6 +16,9 @@ import LoginPage from './Pages/LoginPage';
 import ForgotPassword from './Pages/ForgotPassword';
 import Profile from './Pages/Profile';
 import Contact from './Components/Contact';
+import CreateProductPage from './Pages/CreateProductPage';
+import ProductsPage from './Pages/ProductsPage';
+import StylistsPage from './Pages/StylistsPage';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -34,6 +37,9 @@ function App() {
             <Route path='/authentication' element={<LoginPage />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path = '/create-product' element={<CreateProductPage/>}/>
+            <Route path ="/products" element = {<ProductsPage/>}/>
+            <Route path ="/stylists" element = {<StylistsPage/>}/>
           </Routes>
       </ThemeProvider>
     </div>
