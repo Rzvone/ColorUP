@@ -14,6 +14,7 @@ import manicure from "../manicure.jpg";
 import lashes from "../lashes.jpg";
 import pedicure from "../pedicure.jpg";
 import ButtonBase from '@mui/material/ButtonBase';
+import { useEffect,useState } from "react";
 
 
 const Visitor = () => {
@@ -49,6 +50,18 @@ const Visitor = () => {
       duration: theme.transitions.duration.shortest,
     }),
   }));
+
+  const [stylists, setStylists] = useState([]);
+
+  useEffect(() => {
+    const fetchStylists = async () => {
+      const response = await fetch("http://localhost:8080/api/providers/getProviders");
+      const res = await response.json();
+      console.log(res);
+      setStylists(res);
+    };
+    fetchStylists();
+  }, []);
 
   const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: 'relative',

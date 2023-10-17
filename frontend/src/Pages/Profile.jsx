@@ -318,29 +318,6 @@ const Profile = () => {
                   </form>
                 )}
               </Formik>
-              {userLoggedIn.user.role==="ROLE_VISITOR"&&
-              (!userLoggedIn.user.providerRequest?
-                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          type="button"
-                          onClick={()=>handleProviderRequestCancel(userLoggedIn.user.id)}
-                        >
-                          Request provider
-                        </Button>
-                      </Grid>:
-                      <Grid item xs={12} sx={{ textAlign: "center", marginTop:"1rem" }}>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        type="button"
-                        onClick={()=>handleProviderRequestCancel(userLoggedIn.user.id)}
-                      >
-                        Cancel Request provider
-                      </Button>
-                    </Grid>)
-                      }
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Formik
