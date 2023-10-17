@@ -37,6 +37,10 @@ public class ProviderService {
     public List<ProviderResponse> getProviders(){
         return providerRepository.findAll().stream().map(provider -> new ProviderResponse(provider,imageToDataUrl(loadImageForProvider(provider)))).toList();
     }
+    public ProviderResponse getProvider(Long id){
+        Provider provider = providerRepository.findById(id).orElse(null);
+        return new ProviderResponse(provider,imageToDataUrl(loadImageForProvider(provider)));
+    }
     public byte[] loadImageForProvider(Provider provider) {
         // Construct the image file path based on the user's ID
         String imageFileName = provider.getId() + ".jpg";
