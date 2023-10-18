@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,20 +30,22 @@ public class AppointmentService {
         this.userRepository = userRepository;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointmentRepository.findAll();
-    }
+
 
     public Appointment getAppointmentById(Long appointmentId) {
         return appointmentRepository.findById(appointmentId).orElse(null);
     }
 
-
+    public List<Appointment> getAppointmentsByUserAndProvider(User user, Provider provider){
+        return appointmentRepository.findAppointmentsByUserAndProvider(user,provider);
+    }
     @Transactional
-    public void addNewAppointment(List<Long> serviceIds, long providerId, long customerId, LocalDateTime start) {
+    public void addNewAppointment(List<Long> serviceIds, long providerId, long customerId, String startDate) {
         // Retrieve the provider and customer objects based on their IDs
         Provider provider = providerRepository.findById(providerId).orElseThrow(() -> new EntityNotFoundException("Provider not found"));
         User customer = userRepository.findById(customerId).orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime start = LocalDateTime.parse(startDate, formatter);
 
         // Create a list of ServiceProvided objects based on the given service IDs
         List<ServiceProvided> providerServices = provider.getServicesProvided();
@@ -60,6 +63,18 @@ public class AppointmentService {
         appointment.setUser(customer);
         appointment.setServices(services);
 
+        // Add the appointment to the customer's list
+        List<Appointment> customerAppointments = customer.getAppointments();
+        customerAppointments.add(appointment);
+        customer.setAppointments(customerAppointments);
+
+        // Add the appointment to the provider's list
+        List<Appointment> providerAppointments = provider.getAppointments();
+        providerAppointments.add(appointment);
+        provider.setAppointments(providerAppointments);
+
         // Save the appointment in the repository
         appointmentRepository.save(appointment);
-}}
+    }
+
+}

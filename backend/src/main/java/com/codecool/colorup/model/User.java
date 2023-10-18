@@ -1,6 +1,9 @@
 package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,6 +26,7 @@ import java.util.List;
 @DynamicInsert
 @Inheritance
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "Users")
 public class User implements UserDetails {
     @Id
@@ -42,7 +46,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Appointment> appointments = new ArrayList<>();
 
     @Override

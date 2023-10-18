@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                         auth
                                 .requestMatchers("/api/v1/auth/**")
                                 .permitAll()
-                                .requestMatchers("/appointment").hasRole("VISITOR")
+                                .requestMatchers("/appointment/**").permitAll()
                                 .requestMatchers("/users/**")
                                 .permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

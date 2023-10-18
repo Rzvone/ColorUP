@@ -8,6 +8,7 @@ import com.codecool.colorup.model.User;
 import com.codecool.colorup.provider.ProviderResponse;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -34,8 +35,11 @@ public class ProviderService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Provider getProviderById(Long id){
+        return providerRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Provider not found"));
+    }
     public List<ProviderResponse> getProviders(){
-        return providerRepository.findAll().stream().map(provider -> new ProviderResponse(provider,imageToDataUrl(loadImageForProvider(provider)))).toList();
+        return providerRepository.findAll().stream().map(provider -> ProviderResponse.builder().provider(provider).image(imageToDataUrl(loadImageForProvider(provider))).build()).toList();
     }
     public ProviderResponse getProvider(Long id){
         Provider provider = providerRepository.findById(id).orElse(null);

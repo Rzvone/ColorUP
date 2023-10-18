@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs"
 import {
   Box,
   Grid,
@@ -16,6 +17,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { useTheme } from "@mui/material/styles";
 import { FormControl } from "@mui/base";
+import {useSelector} from "react-redux"
 
 const StylistPage = () => {
   const theme = useTheme();
@@ -23,6 +25,11 @@ const StylistPage = () => {
   const [stylist, setStylist] = useState({});
   const [loading, setLoading] = useState(true);
   const [service, setService] = useState([]);
+  const [servicesId,setServicesId] = useState([]);
+  const [date,setDate] = useState(null)
+
+  const userId = useSelector(state=>state.user.id)
+  const token = useSelector(state=>state.token)
 
   useEffect(() => {
     const fetchStylist = async () => {
@@ -57,6 +64,30 @@ const StylistPage = () => {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+useEffect(()=>{
+  setServicesId(stylist?.provider?.servicesProvided?.map(s=>
+    service.includes(s.serviceType)?s.id:null
+  ).filter(s=>s!=null))
+},[service, stylist])
+
+const handleSubmit = async () =>{
+  await fetch(`http://localhost:8080/appointment/postAppointment/${userId}`,{
+    method:'POST',
+    body:JSON.stringify({
+      serviceIds:servicesId,
+      providerId:id,
+      start:date
+    }),
+    headers:{
+      "Content-Type" :'application/json',
+      "Authorization" : `Bearer ${token}`
+    }
+  })
+  console.log(service)
+  console.log(date)
+  console.log(servicesId)
+}
 
   function getStyles(name, service, theme) {
     return {
@@ -143,6 +174,8 @@ const StylistPage = () => {
                 <InputLabel id="select-date">Select Date:</InputLabel>
                 <DateTimePicker
                   sx={{width:'100%'}}
+                  onChange={(newValue)=>setDate(dayjs(newValue).format("YYYY-MM-DD HH:mm"))}
+                  disablePast
                   viewRenderers={{
                     hours: renderTimeViewClock,
                     minutes: renderTimeViewClock,
@@ -150,7 +183,7 @@ const StylistPage = () => {
                   }}
                 />
               </Box>
-              <Button>Make appointment</Button>
+              <Button onClick={()=>handleSubmit()}>Make appointment</Button>
             </Box>
           </Grid>
         </Grid>
