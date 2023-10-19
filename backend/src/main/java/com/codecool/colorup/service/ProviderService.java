@@ -9,6 +9,7 @@ import com.codecool.colorup.provider.ProviderResponse;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,42 +40,41 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsByUserAndProvider(User user, Provider provider){
         return appointmentRepository.findAppointmentsByUserAndProvider(user,provider);
     }
+    public List<Appointment> getAppointmentsByProvider(Provider provider){
+        return appointmentRepository.findAppointmentsByProvider(provider);
+    }
     @Transactional
     public void addNewAppointment(List<Long> serviceIds, long providerId, long customerId, String startDate) {
         // Retrieve the provider and customer objects based on their IDs
-        Provider provider = providerRepository.findById(providerId).orElseThrow(() -> new EntityNotFoundException("Provider not found"));
-        User customer = userRepository.findById(customerId).orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        Provider provider = providerRepository.findById(providerId)
+                .orElseThrow(() -> new EntityNotFoundException("Provider not found"));
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime start = LocalDateTime.parse(startDate, formatter);
 
         // Create a list of ServiceProvided objects based on the given service IDs
-        List<ServiceProvided> providerServices = provider.getServicesProvided();
-        List<ServiceProvided> services = new ArrayList<>();
-        for (Long serviceId : serviceIds) {
-            services.add(providerServices.stream().filter(serviceProvided -> serviceProvided.getId().equals(serviceId)).findFirst().orElse(null));
-        }
+        List<ServiceProvided> services = provider.getServicesProvided()
+                .stream()
+                .filter(serviceProvided -> serviceIds.contains(serviceProvided.getId()))
+                .collect(Collectors.toList());
 
         // Create a new Appointment object and set its attributes
         Appointment appointment = new Appointment();
         appointment.setStartDate(start);
-        appointment.setEndDate(start.plusMinutes(services.stream().mapToLong(ServiceProvided::getDuration).sum()));
+        appointment.setEndDate(start.plusMinutes(
+                services.stream().mapToLong(ServiceProvided::getDuration).sum()
+        ));
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setProvider(provider);
         appointment.setUser(customer);
         appointment.setServices(services);
 
-        // Add the appointment to the customer's list
-        List<Appointment> customerAppointments = customer.getAppointments();
-        customerAppointments.add(appointment);
-        customer.setAppointments(customerAppointments);
-
-        // Add the appointment to the provider's list
-        List<Appointment> providerAppointments = provider.getAppointments();
-        providerAppointments.add(appointment);
-        provider.setAppointments(providerAppointments);
 
         // Save the appointment in the repository
         appointmentRepository.save(appointment);
     }
+
 
 }

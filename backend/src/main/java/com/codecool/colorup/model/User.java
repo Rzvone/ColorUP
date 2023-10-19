@@ -86,4 +86,7 @@ public class User implements UserDetails {
     }
 
 
+    public void addAppointment(Appointment appointment) {
+        this.appointments.add(appointment);
+    }
 }

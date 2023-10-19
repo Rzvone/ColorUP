@@ -40,6 +40,11 @@ public class AppointmentController {
         Provider provider = providerService.getProviderById(providerId);
         return ResponseEntity.ok(appointmentService.getAppointmentsByUserAndProvider(user,provider));
     }
+    @GetMapping("/getAppointments/provider/{providerId}")
+    public List<Appointment> getAppointmentsByProvider(@PathVariable Long providerId){
+        Provider provider = providerService.getProviderById(providerId);
+        return appointmentService.getAppointmentsByProvider(provider);
+    }
     @CrossOrigin("*")
     @PostMapping(path = "/postAppointment/{userId}")
     public ResponseEntity<String> addAppointment(@PathVariable Long userId,@RequestBody AppointmentRequestDTO AppointmentRequest){
