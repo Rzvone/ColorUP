@@ -1,10 +1,7 @@
 package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.AppointmentStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,7 +41,8 @@ public class Appointment {
     @JoinColumn(name = "provider_id")
     private Provider provider;
 
-    @ManyToMany
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "appointment_services",
             joinColumns = @JoinColumn(name = "appointment_id"),

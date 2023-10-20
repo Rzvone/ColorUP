@@ -1,6 +1,7 @@
 package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.ServiceType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class ServiceProvided {
     private ServiceType serviceType;
 
     @ManyToMany(mappedBy = "services")
+    @JsonBackReference
     private List<Appointment> appointments;
 
     @ManyToOne
