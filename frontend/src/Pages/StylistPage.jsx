@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 import {
   Box,
   Grid,
@@ -14,10 +14,10 @@ import {
   Button,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { useTheme } from "@mui/material/styles";
 import { FormControl } from "@mui/base";
-import {useSelector} from "react-redux"
+import { useSelector } from "react-redux";
 
 const StylistPage = () => {
   const theme = useTheme();
@@ -25,11 +25,11 @@ const StylistPage = () => {
   const [stylist, setStylist] = useState({});
   const [loading, setLoading] = useState(true);
   const [service, setService] = useState([]);
-  const [servicesId,setServicesId] = useState([]);
-  const [date,setDate] = useState(null)
+  const [servicesId, setServicesId] = useState([]);
+  const [date, setDate] = useState(null);
 
-  const userId = useSelector(state=>state.user.id)
-  const token = useSelector(state=>state.token)
+  const userId = useSelector((state) => state.user.id);
+  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     const fetchStylist = async () => {
@@ -65,29 +65,47 @@ const StylistPage = () => {
     );
   };
 
-useEffect(()=>{
-  setServicesId(stylist?.provider?.servicesProvided?.map(s=>
-    service.includes(s.serviceType)?s.id:null
-  ).filter(s=>s!=null))
-},[service, stylist])
+  const isBooked = (date) => {
+    // Convert the selected date to a dayjs object
+    // Iterate through the appointments to check if the date is booked
+    for (const appointment of stylist.provider.providerAppointments) {
+      const startDate = dayjs(appointment.startDate);
+      const endDate = dayjs(appointment.endDate);
 
-const handleSubmit = async () =>{
-  await fetch(`http://localhost:8080/appointment/postAppointment/${userId}`,{
-    method:'POST',
-    body:JSON.stringify({
-      serviceIds:servicesId,
-      providerId:id,
-      start:date
-    }),
-    headers:{
-      "Content-Type" :'application/json',
-      "Authorization" : `Bearer ${token}`
+      // If the selected date is between the start and end of an appointment, it's booked
+      if (date.isBetween(startDate, endDate)) {
+        return true;
+      }
     }
-  })
-  console.log(service)
-  console.log(date)
-  console.log(servicesId)
-}
+
+    // If no booked date is found, return false to enable the date
+    return false;
+  };
+
+  useEffect(() => {
+    setServicesId(
+      stylist?.provider?.servicesProvided
+        ?.map((s) => (service.includes(s.serviceType) ? s.id : null))
+        .filter((s) => s != null)
+    );
+  }, [service, stylist]);
+
+  const handleSubmit = async () => {
+   const response =  await fetch(`http://localhost:8080/appointment/postAppointment/${userId}`, {
+      method: "POST",
+      body: JSON.stringify({
+        serviceIds: servicesId,
+        providerId: id,
+        start: date,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const res = await response.json()
+    console.log(res)
+  };
 
   function getStyles(name, service, theme) {
     return {
@@ -173,9 +191,42 @@ const handleSubmit = async () =>{
               <Box sx={{ marginTop: 2 }}>
                 <InputLabel id="select-date">Select Date:</InputLabel>
                 <DateTimePicker
-                  sx={{width:'100%'}}
-                  onChange={(newValue)=>setDate(dayjs(newValue).format("YYYY-MM-DD HH:mm"))}
+                  sx={{ width: "100%" }}
+                  onChange={(newValue) =>
+                    setDate(dayjs(newValue).format("YYYY-MM-DD HH:mm"))
+                  }
                   disablePast
+                  shouldDisableTime={(value, view) => {
+                    if (view === "hours") {
+                      const currentValue = dayjs(value);
+                      if (currentValue.hour() < 9 || currentValue.hour() > 20) {
+                        return true;
+                      }
+                      for (
+                        let i = 0;
+                        i < stylist.provider.providerAppointments.length;
+                        i++
+                      ) {
+                        const { startDate, endDate } =
+                          stylist.provider.providerAppointments[i];
+                        const starttDate = dayjs(startDate);
+                        const enddDate = dayjs(endDate);
+
+                        if (
+                          currentValue.isBetween(
+                            starttDate,
+                            enddDate,
+                            null,
+                            "[]"
+                          )
+                        ) {
+                          return true;
+                        }
+                      }
+                    }
+
+                    return false;
+                  }}
                   viewRenderers={{
                     hours: renderTimeViewClock,
                     minutes: renderTimeViewClock,
@@ -183,7 +234,7 @@ const handleSubmit = async () =>{
                   }}
                 />
               </Box>
-              <Button onClick={()=>handleSubmit()}>Make appointment</Button>
+              <Button onClick={() => handleSubmit()}>Make appointment</Button>
             </Box>
           </Grid>
         </Grid>

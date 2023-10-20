@@ -47,8 +47,9 @@ public class AppointmentController {
     }
     @CrossOrigin("*")
     @PostMapping(path = "/postAppointment/{userId}")
-    public ResponseEntity<String> addAppointment(@PathVariable Long userId,@RequestBody AppointmentRequestDTO AppointmentRequest){
+    public AppointmentResponseDTO addAppointment(@PathVariable Long userId,@RequestBody AppointmentRequestDTO AppointmentRequest){
         appointmentService.addNewAppointment(AppointmentRequest.getServiceIds(),AppointmentRequest.getProviderId(),userId,AppointmentRequest.getStart());
-        return ResponseEntity.ok("Appointment added successfully. ");
+        User updatedUser = userService.getUserById(userId);
+        return new AppointmentResponseDTO(updatedUser,"Appointment created successfully");
     }
 }

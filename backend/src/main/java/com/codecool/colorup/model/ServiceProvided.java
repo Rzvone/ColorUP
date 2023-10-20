@@ -4,6 +4,8 @@ import com.codecool.colorup.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 @Entity
@@ -16,9 +18,8 @@ public class ServiceProvided {
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
-    @ManyToOne
-    @JoinColumn(name = "appointment_id") // This should match the actual column name in your database
-    private Appointment appointment;
+    @ManyToMany(mappedBy = "services")
+    private List<Appointment> appointments;
 
     @ManyToOne
     @JoinColumn(name = "provider_id") // This should match the actual column name in your database
