@@ -5,6 +5,7 @@ import com.codecool.colorup.enums.Role;
 import com.codecool.colorup.model.Provider;
 import com.codecool.colorup.model.ServiceProvided;
 import com.codecool.colorup.model.User;
+import com.codecool.colorup.provider.ProviderDTO;
 import com.codecool.colorup.provider.ProviderResponse;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 @Service
@@ -45,6 +47,15 @@ public class ProviderService {
     public ProviderResponse getProvider(Long id){
         Provider provider = providerRepository.findById(id).orElse(null);
         return new ProviderResponse(provider,imageToDataUrl(loadImageForProvider(provider)));
+    }
+
+    public List<ProviderDTO> getProvidersPerAppointment(List<Long> providerIds){
+        List<ProviderDTO> providers = new ArrayList<>();
+        for(Long id : providerIds){
+            Provider provider = providerRepository.findById(id).orElse(null);
+            providers.add(new ProviderDTO(provider.getFirstName(),provider.getLastName(),imageToDataUrl(loadImageForProvider(provider))));
+        }
+        return providers;
     }
     public byte[] loadImageForProvider(Provider provider) {
         // Construct the image file path based on the user's ID

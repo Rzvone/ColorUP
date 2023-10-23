@@ -26,4 +26,8 @@ public class ProviderController {
         return providerService.getProvider(id);
     }
 
+    @GetMapping("/getProvidersPerAppointment")
+    public List<ProviderDTO> getProvidersPerAppointment(@RequestParam List<Long> providerIds){
+        return providerService.getProvidersPerAppointment(providerIds);
+    }
 }

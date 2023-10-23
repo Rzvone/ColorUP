@@ -29,5 +29,7 @@ public class ServiceProvided {
 
     @Column(name="duration")
     private int duration;
+    @Column(name="price")
+    private int price;
     // Constructors, getters, and setters
 }

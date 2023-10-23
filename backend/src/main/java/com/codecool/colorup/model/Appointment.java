@@ -29,12 +29,12 @@ public class Appointment {
     private AppointmentStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
     @JoinColumn(name = "provider_id")
     private Provider provider;
 
