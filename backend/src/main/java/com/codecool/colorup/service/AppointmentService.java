@@ -37,6 +37,10 @@ public class AppointmentService {
         return appointmentRepository.findById(appointmentId).orElse(null);
     }
 
+    public void deleteAppointment(Long appointmentId){
+        appointmentRepository.deleteById(appointmentId);
+    }
+
     public List<Appointment> getAppointmentsByUserAndProvider(User user, Provider provider){
         return appointmentRepository.findAppointmentsByUserAndProvider(user,provider);
     }

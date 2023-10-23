@@ -53,7 +53,7 @@ public class ProviderService {
         List<ProviderDTO> providers = new ArrayList<>();
         for(Long id : providerIds){
             Provider provider = providerRepository.findById(id).orElse(null);
-            providers.add(new ProviderDTO(provider.getFirstName(),provider.getLastName(),imageToDataUrl(loadImageForProvider(provider))));
+            providers.add(new ProviderDTO(provider.getId(),provider.getFirstName(),provider.getLastName(),imageToDataUrl(loadImageForProvider(provider))));
         }
         return providers;
     }

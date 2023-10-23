@@ -52,4 +52,9 @@ public class AppointmentController {
         User updatedUser = userService.getUserById(userId);
         return new AppointmentResponseDTO(updatedUser,"Appointment created successfully");
     }
+    @CrossOrigin("*")
+    @DeleteMapping(path = "/deleteAppointment/{appointmentId}")
+    public void deleteAppointment(@PathVariable Long appointmentId){
+        appointmentService.deleteAppointment(appointmentId);
+    }
 }
