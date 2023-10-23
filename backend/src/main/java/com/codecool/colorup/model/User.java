@@ -1,6 +1,7 @@
 package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -47,6 +48,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
 
     @Override

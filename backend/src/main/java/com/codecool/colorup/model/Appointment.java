@@ -11,9 +11,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "appointments")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,13 +28,13 @@ public class Appointment {
     @Column(name = "status")
     private AppointmentStatus status;
 
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinColumn(name = "provider_id")
     private Provider provider;
 

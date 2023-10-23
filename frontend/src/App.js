@@ -20,6 +20,7 @@ import CreateProductPage from './Pages/CreateProductPage';
 import ProductsPage from './Pages/ProductsPage';
 import StylistsPage from './Pages/StylistsPage';
 import StylistPage from './Pages/StylistPage';
+import AppointmentsPage from './Pages/AppointmentsPage';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -43,6 +44,7 @@ function App() {
             <Route path ="/products" element = {<ProductsPage/>}/>
             <Route path ="/stylists" element = {<StylistsPage/>}/>
             <Route path = '/stylists/:id' element = {<StylistPage/>}/>
+            <Route path ='/appointments' element ={<AppointmentsPage/>}/>
           </Routes>
           </LocalizationProvider>
       </ThemeProvider>
