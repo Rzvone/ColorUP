@@ -129,19 +129,6 @@ const Visitor = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} sx={{ marginTop: "3rem" }}>
-        <AnimatedTypography
-          variant="h1"
-          sx={{
-            color: theme.palette.primary.main,
-            textAlign: "center",
-            textShadow: "1px 1px 10px #061a40, 1px 1px 10px #E4E4D0",
-          }}
-          style={springProps}
-        >
-          Color Up
-        </AnimatedTypography>
-      </Grid>
       <Grid item xs={12} sx={{ marginTop: "2rem" }}>
         <AnimatedTypography
           variant="h3"
@@ -299,21 +286,6 @@ const Visitor = () => {
             </Collapse>
           </Card>
         </Grid>
-      </Grid>
-      <Grid item xs={12} sx={{ marginTop: "2rem" }}>
-        <AnimatedTypography
-          variant="h3"
-          sx={{
-            color: theme.palette.primary.main,
-            textAlign: "center",
-          }}
-          style={springProps}
-        >
-          Here are our top providers:
-        </AnimatedTypography>
-      </Grid>
-      <Grid item container justifyContent="center" spacing={4} xs={12}>
-        
       </Grid>
     </Grid>
   );

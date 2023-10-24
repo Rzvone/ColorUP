@@ -3,6 +3,7 @@ import AdminRequests from "../Components/AdminRequests";
 import Visitor from "../Components/Visitor";
 import state from "../state";
 import SimpleFooter from "../Components/SimpleFooter";
+import Stylists from "../Components/Stylists";
 const HomePage = () => {
   const user = useSelector((state) => state.user);
   return (
@@ -15,6 +16,7 @@ const HomePage = () => {
       ) : (
         <div>
           <Visitor />
+          <Stylists/>
           <SimpleFooter />
         </div>
       )}

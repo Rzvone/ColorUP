@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Card, CardContent, CardMedia, Typography, Rating} from "@mui/material";
+import { Box, Grid, Card, CardContent, CardMedia, Typography, Rating, useTheme} from "@mui/material";
 import {Link} from "react-router-dom"
 import { makeStyles } from "@mui/styles";
 import SimpleFooter from "./SimpleFooter";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const Stylists = () => {
   const classes = useStyles();
   const [stylists, setStylists] = useState([]);
-
+  const theme = useTheme();
   useEffect(() => {
     const fetchStylists = async () => {
       const response = await fetch("http://localhost:8080/api/providers/getProviders");
@@ -46,7 +46,7 @@ const Stylists = () => {
 
   return (
     <Box sx={{ margin: "3rem" }}>
-      <Typography variant="h3" sx={{textAlign:'center'}}>Our experienced stylists</Typography>
+      <Typography variant="h3" sx={{color: theme.palette.primary.main,textAlign:'center'}}>Our experienced stylists</Typography>
       <Box sx={{margin:2}}>
       <Typography sx={{textAlign:'center'}}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Typography>
       </Box>
