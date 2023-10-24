@@ -16,11 +16,7 @@ export default function SimpleFooter() {
             ? theme.palette.grey[200]
             : theme.palette.grey[800],
         p: 6,
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        overflow: 'hidden'
-        
+        marginTop: '5rem',        
       }}
     >
       <Container maxWidth="lg">
