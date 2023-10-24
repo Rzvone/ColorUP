@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Grid, Card, CardContent, CardMedia, Typography, Rating} from "@mui/material";
 import {Link} from "react-router-dom"
 import { makeStyles } from "@mui/styles";
+import SimpleFooter from "./SimpleFooter";
 
 const useStyles = makeStyles((theme) => ({
   card: {

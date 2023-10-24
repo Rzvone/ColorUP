@@ -1,7 +1,13 @@
-import Stylists from "../Components/Stylists"
+import SimpleFooter from "../Components/SimpleFooter";
+import Stylists from "../Components/Stylists";
 
-const StylistsPage = () =>{
-return <Stylists/>
-}
+const StylistsPage = () => {
+  return (
+    <>
+      <Stylists />
+      <SimpleFooter/>
+    </>
+  );
+};
 
-export default StylistsPage
+export default StylistsPage;
