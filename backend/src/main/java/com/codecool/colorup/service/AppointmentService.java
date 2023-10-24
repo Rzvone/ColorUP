@@ -78,6 +78,7 @@ public class AppointmentService {
 
         // Save the appointment in the repository
         appointmentRepository.save(appointment);
+        customer.addAppointment(appointment);
     }
 
 
