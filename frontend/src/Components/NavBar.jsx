@@ -117,7 +117,7 @@ const NavBar = () => {
   };
 
   return (
-    <AppBar position="static" enableColorOnDark>
+    <AppBar position="sticky" enableColorOnDark>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <SpaIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
