@@ -17,7 +17,8 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { useTheme } from "@mui/material/styles";
 import { FormControl } from "@mui/base";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import state, {setLogin} from '../state/index'
 
 const StylistPage = () => {
   const theme = useTheme();
@@ -30,6 +31,8 @@ const StylistPage = () => {
 
   const userId = useSelector((state) => state.user.id);
   const token = useSelector((state) => state.token);
+  const user = useSelector(state=>state.user)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchStylist = async () => {
@@ -65,23 +68,6 @@ const StylistPage = () => {
     );
   };
 
-  const isBooked = (date) => {
-    // Convert the selected date to a dayjs object
-    // Iterate through the appointments to check if the date is booked
-    for (const appointment of stylist.provider.providerAppointments) {
-      const startDate = dayjs(appointment.startDate);
-      const endDate = dayjs(appointment.endDate);
-
-      // If the selected date is between the start and end of an appointment, it's booked
-      if (date.isBetween(startDate, endDate)) {
-        return true;
-      }
-    }
-
-    // If no booked date is found, return false to enable the date
-    return false;
-  };
-
   useEffect(() => {
     setServicesId(
       stylist?.provider?.servicesProvided
@@ -91,20 +77,23 @@ const StylistPage = () => {
   }, [service, stylist]);
 
   const handleSubmit = async () => {
-   const response =  await fetch(`http://localhost:8080/appointment/postAppointment/${userId}`, {
-      method: "POST",
-      body: JSON.stringify({
-        serviceIds: servicesId,
-        providerId: id,
-        start: date,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const res = await response.json()
-    console.log(res)
+    const response = await fetch(
+      `http://localhost:8080/appointment/postAppointment/${userId}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          serviceIds: servicesId,
+          providerId: id,
+          start: date,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const res = await response.json();
+    dispatch(setLogin({user:{...user,appointments:res.user.appointments}, token:token}));
   };
 
   function getStyles(name, service, theme) {
@@ -197,31 +186,21 @@ const StylistPage = () => {
                   }
                   disablePast
                   shouldDisableTime={(value, view) => {
-                    if (view === "hours") {
-                      const currentValue = dayjs(value);
-                      if (currentValue.hour() < 9 || currentValue.hour() > 20) {
-                        return true;
-                      }
-                      for (
-                        let i = 0;
-                        i < stylist.provider.providerAppointments.length;
-                        i++
+                    const currentValue = dayjs(value);
+                    if (currentValue.hour() < 9 || currentValue.hour() > 20) {
+                      return true;
+                    }
+                    for (let i = 0; i < stylist.provider.providerAppointments.length; i++) {
+                      const { startDate, endDate } = stylist.provider.providerAppointments[i];
+                      const starttDate = dayjs(startDate);
+                      const enddDate = dayjs(endDate);
+                  
+                      // Check if the value falls within the appointment's time slot,
+                      // but allow for a 15-minute gap between appointments.
+                      if (
+                        currentValue.isBetween(starttDate, enddDate, null, '[]')
                       ) {
-                        const { startDate, endDate } =
-                          stylist.provider.providerAppointments[i];
-                        const starttDate = dayjs(startDate);
-                        const enddDate = dayjs(endDate);
-
-                        if (
-                          currentValue.isBetween(
-                            starttDate,
-                            enddDate,
-                            null,
-                            "[]"
-                          )
-                        ) {
-                          return true;
-                        }
+                        return true; // Disable times during existing appointments
                       }
                     }
 
@@ -229,8 +208,6 @@ const StylistPage = () => {
                   }}
                   viewRenderers={{
                     hours: renderTimeViewClock,
-                    minutes: renderTimeViewClock,
-                    seconds: renderTimeViewClock,
                   }}
                 />
               </Box>
