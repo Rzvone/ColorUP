@@ -1,12 +1,15 @@
 package com.codecool.colorup.controller;
 
+import com.codecool.colorup.error.CustomErrorResponse;
 import com.codecool.colorup.model.Appointment;
 import com.codecool.colorup.model.Provider;
 import com.codecool.colorup.model.User;
 import com.codecool.colorup.service.AppointmentService;
 import com.codecool.colorup.service.ProviderService;
 import com.codecool.colorup.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,11 +50,29 @@ public class AppointmentController {
     }
     @CrossOrigin("*")
     @PostMapping(path = "/postAppointment/{userId}")
-    public AppointmentResponseDTO addAppointment(@PathVariable Long userId,@RequestBody AppointmentRequestDTO AppointmentRequest){
-        appointmentService.addNewAppointment(AppointmentRequest.getServiceIds(),AppointmentRequest.getProviderId(),userId,AppointmentRequest.getStart());
-        User updatedUser = userService.getUserById(userId);
-        return new AppointmentResponseDTO(updatedUser,"Appointment created successfully");
+    public ResponseEntity<?> addAppointment(@PathVariable Long userId, @RequestBody AppointmentRequestDTO appointmentRequest) {
+        try {
+            appointmentService.addNewAppointment(appointmentRequest.getServiceIds(), appointmentRequest.getProviderId(), userId, appointmentRequest.getStart());
+            User updatedUser = userService.getUserById(userId);
+            AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(updatedUser, "Appointment created successfully");
+            return ResponseEntity.ok(responseDTO);
+        } catch (EntityNotFoundException e) {
+            // Handle the EntityNotFoundException (or other exceptions) here
+            // Create a custom error response object with status code and message
+            CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.NOT_FOUND, "User or Provider not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            // Handle other exceptions here
+            // Create a custom error response object with status code and message
+            CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
+
+    // Custom error response class
+
+
+
     @CrossOrigin("*")
     @DeleteMapping(path = "/deleteAppointment/{appointmentId}")
     public void deleteAppointment(@PathVariable Long appointmentId){

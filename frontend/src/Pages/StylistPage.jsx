@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import {
   Box,
@@ -19,7 +19,8 @@ import { useTheme } from "@mui/material/styles";
 import { FormControl } from "@mui/base";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import state, {setLogin} from '../state/index'
+import state, { setLogin } from "../state/index";
+import SnackbarComponent from "../Components/SnackbarComponent";
 
 const StylistPage = () => {
   const theme = useTheme();
@@ -29,12 +30,15 @@ const StylistPage = () => {
   const [service, setService] = useState([]);
   const [servicesId, setServicesId] = useState([]);
   const [date, setDate] = useState(null);
+  const [open, setOpen] = useState(false);
+  const message = useRef("");
+  const severity = useRef("");
 
   const user = useSelector((state) => state.user);
   // const userId = useSelector((state) => state.user.id);
   const token = useSelector((state) => state.token);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchStylist = async () => {
@@ -95,15 +99,26 @@ const StylistPage = () => {
       }
     );
     const res = await response.json();
-    dispatch(setLogin({user:{...user,appointments:res.user.appointments}, token:token}));
-    alert("Appointment created successfully!");
-    navigate('/appointments');
+    dispatch(
+      setLogin({
+        user: { ...user, appointments: res.user.appointments },
+        token: token,
+      })
+    );
+    setOpen(true);
+    if (response.ok) {
+      message.current = res.message;
+      severity.current = "success";
+    } else {
+      severity.current = "error";
+      message.current = res.message;
+    }
   };
 
   const pleaseLogIn = () => {
     alert("Please log into your account to make an appointment.");
     navigate("/authentication");
-  }
+  };
 
   function getStyles(name, service, theme) {
     return {
@@ -199,15 +214,20 @@ const StylistPage = () => {
                     if (currentValue.hour() < 9 || currentValue.hour() > 20) {
                       return true;
                     }
-                    for (let i = 0; i < stylist.provider.providerAppointments.length; i++) {
-                      const { startDate, endDate } = stylist.provider.providerAppointments[i];
+                    for (
+                      let i = 0;
+                      i < stylist.provider.providerAppointments.length;
+                      i++
+                    ) {
+                      const { startDate, endDate } =
+                        stylist.provider.providerAppointments[i];
                       const starttDate = dayjs(startDate);
                       const enddDate = dayjs(endDate);
-                  
+
                       // Check if the value falls within the appointment's time slot,
                       // but allow for a 15-minute gap between appointments.
                       if (
-                        currentValue.isBetween(starttDate, enddDate, null, '[]')
+                        currentValue.isBetween(starttDate, enddDate, null, "[]")
                       ) {
                         return true; // Disable times during existing appointments
                       }
@@ -220,7 +240,25 @@ const StylistPage = () => {
                   }}
                 />
               </Box>
-              <Button variant="outlined" onClick={() => user === null ? pleaseLogIn() : handleSubmit()} sx={{marginTop:'1rem'}}>Make appointment</Button>
+              <Button
+                variant="outlined"
+                onClick={() => (user === null ? pleaseLogIn() : handleSubmit())}
+                sx={{ marginTop: "1rem" }}
+              >
+                Make appointment
+              </Button>
+              <SnackbarComponent
+                severity={severity.current}
+                message={message.current}
+                open={open}
+                handleClose={(event, reason) => {
+                  if (reason === "clickaway") {
+                    return;
+                  }
+
+                  setOpen(false);
+                }}
+              ></SnackbarComponent>
             </Box>
           </Grid>
         </Grid>
