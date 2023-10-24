@@ -18,6 +18,7 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { useTheme } from "@mui/material/styles";
 import { FormControl } from "@mui/base";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const StylistPage = () => {
   const theme = useTheme();
@@ -28,8 +29,10 @@ const StylistPage = () => {
   const [servicesId, setServicesId] = useState([]);
   const [date, setDate] = useState(null);
 
-  const userId = useSelector((state) => state.user.id);
+  const user = useSelector((state) => state.user);
+  // const userId = useSelector((state) => state.user.id);
   const token = useSelector((state) => state.token);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStylist = async () => {
@@ -91,7 +94,7 @@ const StylistPage = () => {
   }, [service, stylist]);
 
   const handleSubmit = async () => {
-   const response =  await fetch(`http://localhost:8080/appointment/postAppointment/${userId}`, {
+   const response =  await fetch(`http://localhost:8080/appointment/postAppointment/${user.id}`, {
       method: "POST",
       body: JSON.stringify({
         serviceIds: servicesId,
@@ -105,7 +108,14 @@ const StylistPage = () => {
     });
     const res = await response.json()
     console.log(res)
+    alert("Appointment created successfully!")
+    navigate('/appointments')
   };
+
+  const pleaseLogIn = () => {
+    alert("Please log into your account to make an appointment.");
+    navigate("/authentication");
+  }
 
   function getStyles(name, service, theme) {
     return {
@@ -234,7 +244,7 @@ const StylistPage = () => {
                   }}
                 />
               </Box>
-              <Button onClick={() => handleSubmit()}>Make appointment</Button>
+              <Button variant="outlined" onClick={() => user === null ? pleaseLogIn() : handleSubmit()} sx={{marginTop:'1rem'}}>Make appointment</Button>
             </Box>
           </Grid>
         </Grid>

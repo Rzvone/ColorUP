@@ -160,8 +160,7 @@ const AppointmentsPage = () => {
                   ) : (
                     <Typography>
                       Your appointment is currently{" "}
-                      {appointment.status.toLowerCase()}, if you're willing to
-                      cancel it, please contact the provider
+                      {appointment.status.toLowerCase()}, for additional info please contact us.
                     </Typography>
                   )}
                 </CardActions>
