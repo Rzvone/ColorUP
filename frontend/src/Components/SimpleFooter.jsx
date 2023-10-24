@@ -4,11 +4,11 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 
 export default function SimpleFooter() {
   return (
-    <Box
+    <Paper
       component="footer"
       sx={{
         backgroundColor: (theme) =>
@@ -16,7 +16,7 @@ export default function SimpleFooter() {
             ? theme.palette.grey[200]
             : theme.palette.grey[800],
         p: 6,
-        marginTop: '5rem',        
+        marginTop: "25rem",
       }}
     >
       <Container maxWidth="lg">
@@ -74,6 +74,6 @@ export default function SimpleFooter() {
           </Typography>
         </Box>
       </Container>
-    </Box>
+    </Paper>
   );
 }
