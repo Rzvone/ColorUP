@@ -12,6 +12,7 @@ const ProductForm = () => {
       formData.append("category", "nails");
       formData.append("description", values.description);
       formData.append("price", values.price);
+      formData.append("stock", values.stock);
       formData.append("image", values.image);
       console.log(values)
       formData.forEach((value, key) => {
@@ -44,6 +45,7 @@ const ProductForm = () => {
     name: "",
     description: "",
     price: 0,
+    stock:0,
     image: "",
   };
 
@@ -51,6 +53,7 @@ const ProductForm = () => {
     name: yup.string().required("Product name is required!"),
     description: yup.string().required("Product description is required!"),
     price: yup.number().required("Price is required").positive("Price must be positive"),
+    stock:yup.number().required("Stock is required").positive("Stock must be positive"),
     image: yup
       .mixed()
       .required("Image is required")
@@ -124,6 +127,20 @@ const ProductForm = () => {
                   value={values.price}
                   error={Boolean(touched.price) && Boolean(errors.price)}
                   helperText={touched.price && errors.price}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Product stock"
+                  variant="outlined"
+                  type="number"
+                  name="stock"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.stock}
+                  error={Boolean(touched.stock) && Boolean(errors.stock)}
+                  helperText={touched.stock && errors.stock}
                 />
               </Grid>
               <Grid item xs={12}>

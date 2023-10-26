@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "product_description", nullable = false)
     private String description;
 
+    @Column(name = "product_in_stock",nullable = false)
+    private int stock;
+
     @Column(name = "product_price", nullable = false)
     @Min(value = 0, message = "Price must be positive")
     private Double price;
