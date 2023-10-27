@@ -50,6 +50,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Appointment> appointments = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Cart cart;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

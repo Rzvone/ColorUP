@@ -5,15 +5,19 @@ import com.codecool.colorup.config.JwtService;
 import com.codecool.colorup.enums.Role;
 import com.codecool.colorup.forgotpassword.mail.RegistrationMailSender;
 import com.codecool.colorup.forgotpassword.password.ForgotPasswordRequest;
+import com.codecool.colorup.model.Cart;
 import com.codecool.colorup.model.User;
+import com.codecool.colorup.repository.CartRepository;
 import com.codecool.colorup.repository.ProviderRepository;
 import com.codecool.colorup.repository.UserRepository;
 import com.codecool.colorup.service.UserService;
 import jakarta.mail.MessagingException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 @Data
 @Service
 @RequiredArgsConstructor
+
 public class AuthenticationService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository repository;
@@ -33,6 +38,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private RegistrationMailSender mailSender;
+    private final CartRepository cartRepository;
 
     public AuthenticationResponse register(RegisterRequest request){
         var user = User.builder()
@@ -45,6 +51,10 @@ public class AuthenticationService {
                 .providerRequest(false)
                 .build();
         repository.save(user);
+
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

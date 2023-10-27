@@ -70,6 +70,7 @@ public List<User> getPendingProviders(){
         product.setPrice(productDTO.getPrice());
         product.setCategory(productDTO.getCategory());
         product.setDescription(productDTO.getDescription());
+        product.setStock(productDTO.getStock());
 
         // Save the product to your database or use JPA repository to save it
         productService.saveProduct(product);
