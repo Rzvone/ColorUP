@@ -2,6 +2,7 @@ package com.codecool.colorup.service;
 
 import com.codecool.colorup.DTOS.CartPageDTO;
 import com.codecool.colorup.DTOS.ProductCartDTO;
+import com.codecool.colorup.DTOS.UpdateCartDTO;
 import com.codecool.colorup.model.Cart;
 import com.codecool.colorup.model.Product;
 import com.codecool.colorup.model.User;
@@ -40,6 +41,28 @@ public class CartServiceImpl implements CartService{
         int newQuantity = productQuantityMap.getOrDefault(product, 0) + productCartDTO.getQuantity();
         productQuantityMap.put(product, newQuantity);
 
+        // Update the price based on the products' price and quantity
+        double totalCartPrice = calculateTotalCartPrice(productQuantityMap);
+        cart.setPrice(totalCartPrice);
+
+        // Save the updated cart
+        cartRepository.save(cart);
+    }
+    @Override
+    public void updateCart(Long userId, UpdateCartDTO updateCartDTO) {
+        User user = userService.getUserById(userId);
+        Product product = productService.findById(updateCartDTO.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        Cart cart = user.getCart();
+        Map<Product, Integer> productQuantityMap = cart.getProductQuantityMap();
+
+        // Update the quantity in the productQuantityMap
+        int newQuantity = updateCartDTO.isAddOrRemove() ? productQuantityMap.getOrDefault(product, 0) + 1 : productQuantityMap.getOrDefault(product, 0) -1;
+        if(newQuantity <1){
+            productQuantityMap.remove(product);
+        }else {
+            productQuantityMap.put(product, newQuantity);
+        }
         // Update the price based on the products' price and quantity
         double totalCartPrice = calculateTotalCartPrice(productQuantityMap);
         cart.setPrice(totalCartPrice);
