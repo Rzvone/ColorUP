@@ -6,6 +6,8 @@ import Modal from '@mui/material/Modal';
 import { InputLabel, TextField } from '@mui/material';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from "formik";
+import {useSelector, useDispatch} from "react-redux"
+import { setLogin } from '../state';
 
 const style = {
   position: 'absolute',
@@ -21,6 +23,9 @@ const style = {
 
 export default function ProductModal({open, handleClose, product}) {
 
+  const user = useSelector(state=>state.user)
+  const token = useSelector(state=>state.token)
+  const dispatch = useDispatch()
   const validationSchema = Yup.object().shape({
     quantity: Yup.number()
       .required('Quantity is required')
@@ -44,9 +49,20 @@ export default function ProductModal({open, handleClose, product}) {
           <Formik
             initialValues={{ quantity: 1, maxStock: product.stock }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              // Handle the form submission here (e.g., add to cart)
-              console.log('Submitted:', values.quantity);
+            onSubmit={async (values) => {
+              const response = await fetch(`http://localhost:8080/api/cart/add/${user.id}`,{
+                method:"PUT",
+                body:JSON.stringify({
+                  productId:product.id,
+                  quantity:values.quantity
+                }),
+                headers:{
+                  "Content-Type":"application/json",
+                  Authorization:`Bearer ${token}`
+                }
+              })
+              const res = await response.json()
+              dispatch(setLogin({user:{...user,cart:res.user.cart}, token:token}))
             }}
           >
             {({ values, handleChange, handleBlur, handleSubmit, errors, touched }) => (

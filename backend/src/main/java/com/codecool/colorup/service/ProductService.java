@@ -1,6 +1,7 @@
 package com.codecool.colorup.service;
 
 import com.codecool.colorup.model.Product;
+import com.codecool.colorup.products.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,4 +15,7 @@ public interface ProductService {
     Optional<Product> findById(Long id);
     Page<Product> findAllProductsPageable(Pageable pageable);
     void saveProduct(Product product);
+    ProductResponse getProductResponse(Product product);
+    String imageToDataUrl(byte[] image);
+    byte[] loadImageForProduct(Product product);
 }

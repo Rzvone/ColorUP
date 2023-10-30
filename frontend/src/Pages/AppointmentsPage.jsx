@@ -28,12 +28,16 @@ const AppointmentsPage = () => {
       const params = [...uniqueProviderIds]
         .map((providerId) => `providerIds=${providerId}`)
         .join("&");
-      const response = await fetch(
-        `http://localhost:8080/api/providers/getProvidersPerAppointment?${params}`
-      );
-      const res = await response.json();
-      setProviders(res);
+  
+      if (params) {
+        const response = await fetch(
+          `http://localhost:8080/api/providers/getProvidersPerAppointment?${params}`
+        );
+        const res = await response.json();
+        setProviders(res);
+      }
     };
+  
     fetchProviders();
   }, [user.appointments]);
 
@@ -80,7 +84,7 @@ const AppointmentsPage = () => {
   };
 
   return (
-    <div >
+    providers.length>0?<div >
       <Box sx={{ marginTop: 10, marginLeft: 5, marginRight: 5, marginBottom: 10 }}>
         <Grid container spacing={2}>
           {user.appointments.map((appointment, i) => {
@@ -176,7 +180,7 @@ const AppointmentsPage = () => {
         </Grid>
       </Box>
       <SimpleFooter />
-    </div>
+    </div>:<Typography variant="h3">No appointments yet</Typography>
   );
 };
 

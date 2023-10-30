@@ -1,5 +1,6 @@
 package com.codecool.colorup.DTOS;
 
+import com.codecool.colorup.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCartDTO {
-    private Long productId;
-    private int quantity;
+public class ProductResponseDTO {
+    private User user;
+    private String message;
 }

@@ -21,6 +21,7 @@ import ProductsPage from './Pages/ProductsPage';
 import StylistsPage from './Pages/StylistsPage';
 import StylistPage from './Pages/StylistPage';
 import AppointmentsPage from './Pages/AppointmentsPage';
+import CartPage from './Pages/CartPage';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -45,6 +46,7 @@ function App() {
             <Route path ="/stylists" element = {<StylistsPage/>}/>
             <Route path = '/stylists/:id' element = {<StylistPage/>}/>
             <Route path ='/appointments' element ={<AppointmentsPage/>}/>
+            <Route path = '/cart' element={<CartPage/>}/>
           </Routes>
           </LocalizationProvider>
       </ThemeProvider>

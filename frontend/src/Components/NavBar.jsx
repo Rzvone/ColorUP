@@ -10,13 +10,14 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MenuItem from "@mui/material/MenuItem";
 import SpaIcon from "@mui/icons-material/Spa";
 import colorUpLogo from "../logo100px.png";
 import About from "./About";
 import { Login } from "@mui/icons-material";
 import Register from "../Pages/Register";
-import {Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import DefaultAvatar from "./DefaultAvatar";
 import { useSelector } from "react-redux";
@@ -27,6 +28,16 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Stack from "@mui/material/Stack";
+import Badge from "@mui/material/Badge";
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
 
 const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -55,11 +66,12 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
-  const pages = userLoggedIn?.user?.role === null
-  ? ["Services", "About", "Contact"]
-  : userLoggedIn?.user?.role === "ROLE_ADMIN"
-  ? ["Create product"]
-  : ["Services", "About", "Contact", "Products", "Stylists"];
+  const pages =
+    userLoggedIn?.user?.role === null
+      ? ["Services", "About", "Contact"]
+      : userLoggedIn?.user?.role === "ROLE_ADMIN"
+      ? ["Create product"]
+      : ["Services", "About", "Contact", "Products", "Stylists"];
 
   const settings = ["Profile", "Appointments", "Logout"];
 
@@ -208,7 +220,11 @@ const NavBar = () => {
             {pages.map((page) => (
               <RouterLink
                 key={page}
-                to={page.split(" ").length===1?`/${page.toLowerCase()}`:`${page.split(" ").join("-").toLowerCase()}`}
+                to={
+                  page.split(" ").length === 1
+                    ? `/${page.toLowerCase()}`
+                    : `${page.split(" ").join("-").toLowerCase()}`
+                }
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Button
@@ -221,11 +237,19 @@ const NavBar = () => {
               </RouterLink>
             ))}
           </Box>
+          <RouterLink to='/cart'>
+          {userLoggedIn.user?<IconButton aria-label="cart" sx={{marginRight:2}}>
+            <StyledBadge badgeContent={Object.values(userLoggedIn.user.cart.productQuantityMap).reduce((acc,cur)=>acc+=cur,0)||0} color="secondary">
+              <ShoppingCartIcon />
+            </StyledBadge>
+          </IconButton>:<></>}  
+          </RouterLink>
+
           <FormControlLabel
             control={
               <MaterialUISwitch
                 sx={{ m: 1 }}
-                checked={isSwitchOn} 
+                checked={isSwitchOn}
                 onChange={handleSwitchToggle}
               />
             }
@@ -234,13 +258,14 @@ const NavBar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {userLoggedIn.user.image!=""?
-                  <Avatar src={userLoggedIn.user.image}></Avatar>:
-                  <DefaultAvatar
-                  firstName={userLoggedIn.user.firstName}
-                  lastName={userLoggedIn.user.lastName}
-                />  
-                }
+                  {userLoggedIn.user.image !== "" ? (
+                    <Avatar src={userLoggedIn.user.image}></Avatar>
+                  ) : (
+                    <DefaultAvatar
+                      firstName={userLoggedIn.user.firstName}
+                      lastName={userLoggedIn.user.lastName}
+                    />
+                  )}
                 </IconButton>
               </Tooltip>
               <Menu
@@ -270,10 +295,9 @@ const NavBar = () => {
                           color: "black",
                           textDecoration: "none",
                         }}
-                        onClick={() =>{
-                          dispatch(setLogout({ user: null, token: null }))
-                        }
-                        }
+                        onClick={() => {
+                          dispatch(setLogout({ user: null, token: null }));
+                        }}
                       >
                         {setting}
                       </Typography>
