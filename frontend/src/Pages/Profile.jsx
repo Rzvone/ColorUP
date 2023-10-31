@@ -1,4 +1,11 @@
-import { Grid, TextField, Typography, Button } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Typography,
+  Button,
+  Avatar,
+  IconButton,
+} from "@mui/material";
 import React from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
@@ -24,13 +31,20 @@ const Profile = () => {
     user: state.user,
     token: state.token,
   }));
+  const hasImage = userLoggedIn.user.image !== "";
+  console.log(hasImage);
 
   const fetchUserData = () => {
     fetch(`http://localhost:8080/users/getUser/${userLoggedIn.user.id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        dispatch(setLogin({ user: {...data.user,image:data.image}, token: userLoggedIn.token }));
+        dispatch(
+          setLogin({
+            user: { ...data.user, image: data.image },
+            token: userLoggedIn.token,
+          })
+        );
       });
   };
   function TabPanel(props) {
@@ -71,12 +85,12 @@ const Profile = () => {
     lastName: userLoggedIn.user.lastName,
     email: userLoggedIn.user.email,
     contactNumber: userLoggedIn.user.contactNumber,
-    image:null
+    image: null,
   };
 
   const initialValuesPasswordChange = {
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   };
 
   const detailsSchema = yup.object().shape({
@@ -119,9 +133,9 @@ const Profile = () => {
 
   const handleUpdateDetails = async (values, onSubmitProps) => {
     const formData = new FormData();
-    Object.entries(values).forEach(([key,value])=>{
-      formData.append(`${key}`, value)
-    })
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(`${key}`, value);
+    });
     try {
       const response = await fetch(
         `http://localhost:8080/users/updateUser/${userLoggedIn.user.id}`,
@@ -130,15 +144,17 @@ const Profile = () => {
           headers: {
             Authorization: `Bearer ${userLoggedIn.token}`,
           },
-          body: formData
+          body: formData,
         }
       );
 
       if (response.ok) {
         fetchUserData();
         alert("Account details updated successfully!");
+        console.log("update succeessfull");
       } else {
         console.error("Failed to update details:", response.statusText);
+        console.log("update failed");
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -216,108 +232,230 @@ const Profile = () => {
               <Tab label="Request to become a provider" {...a11yProps(2)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-              <Formik
-                onSubmit={handleUpdateDetails}
-                initialValues={initialValuesDetails}
-                validationSchema={detailsSchema}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleBlur,
-                  handleChange,
-                  handleSubmit,
-                  setFieldValue,
-                  resetForm,
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                    <Grid container spacing={4}>
-                      <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
-                        <TextField
-                          label="First Name"
-                          variant="outlined"
-                          name="firstName"
+              {hasImage ? (
+                <Formik
+                  onSubmit={handleUpdateDetails}
+                  initialValues={initialValuesDetails}
+                  validationSchema={detailsSchema}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                    resetForm,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12} sx={{ textAlign: "center" }}>
+                          <IconButton>
+                            <Avatar
+                              src={userLoggedIn.user.image}
+                              sx={{ height: "100px", width: "100px" }}
+                            />
+                          </IconButton>
+                        </Grid>
+                        <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
+                          <TextField
+                            label="First Name"
+                            variant="outlined"
+                            name="firstName"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.firstName}
+                            error={
+                              Boolean(touched.firstName) &&
+                              Boolean(errors.firstName)
+                            }
+                            helperText={touched.firstName && errors.firstName}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
+                          <TextField
+                            label="Last Name"
+                            variant="outlined"
+                            name="lastName"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.lastName}
+                            error={
+                              Boolean(touched.lastName) &&
+                              Boolean(errors.lastName)
+                            }
+                            helperText={touched.lastName && errors.lastName}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            disabled
+                            // sx={{ minWidth: "243px" }}
+                            label="E-mail address"
+                            variant="outlined"
+                            name="email"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.email}
+                            error={
+                              Boolean(touched.email) && Boolean(errors.email)
+                            }
+                            helperText={touched.email && errors.email}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Contact number"
+                            variant="outlined"
+                            name="contactNumber"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.contactNumber}
+                            error={
+                              Boolean(touched.contactNumber) &&
+                              Boolean(errors.contactNumber)
+                            }
+                            helperText={
+                              touched.contactNumber && errors.contactNumber
+                            }
+                          />
+                        </Grid>
+                        {/* <Grid item xs={12}>
+                        <label>Add profile picture: </label>
+                        <input
+                          id="image"
+                          name="image"
+                          type="file"
                           onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.firstName}
-                          error={
-                            Boolean(touched.firstName) &&
-                            Boolean(errors.firstName)
-                          }
-                          helperText={touched.firstName && errors.firstName}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
-                        <TextField
-                          label="Last Name"
-                          variant="outlined"
-                          name="lastName"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.lastName}
-                          error={
-                            Boolean(touched.lastName) &&
-                            Boolean(errors.lastName)
-                          }
-                          helperText={touched.lastName && errors.lastName}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          disabled
-                          // sx={{ minWidth: "243px" }}
-                          label="E-mail address"
-                          variant="outlined"
-                          name="email"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.email}
-                          error={
-                            Boolean(touched.email) && Boolean(errors.email)
-                          }
-                          helperText={touched.email && errors.email}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Contact number"
-                          variant="outlined"
-                          name="contactNumber"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.contactNumber}
-                          error={
-                            Boolean(touched.contactNumber) &&
-                            Boolean(errors.contactNumber)
-                          }
-                          helperText={
-                            touched.contactNumber && errors.contactNumber
+                          onChange={(event) =>
+                            setFieldValue("image", event.currentTarget.files[0])
                           }
                         />
+                      </Grid> */}
+                        <Grid item xs={12} sx={{ textAlign: "center" }}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            type="submit"
+                          >
+                            Update Details
+                          </Button>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12}>
-                      <label>Add profile picture: </label>
-                      <input 
-                      id="image"
-                      name="image"
-                      type="file"
-                      onBlur={handleBlur}
-                      onChange={(event) => setFieldValue("image", event.currentTarget.files[0])}/>
+                    </form>
+                  )}
+                </Formik>
+              ) : (
+                <Formik
+                  onSubmit={handleUpdateDetails}
+                  initialValues={initialValuesDetails}
+                  validationSchema={detailsSchema}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                    resetForm,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Grid container spacing={4}>
+                        <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
+                          <TextField
+                            label="First Name"
+                            variant="outlined"
+                            name="firstName"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.firstName}
+                            error={
+                              Boolean(touched.firstName) &&
+                              Boolean(errors.firstName)
+                            }
+                            helperText={touched.firstName && errors.firstName}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} sx={{ textAlign: "initial" }}>
+                          <TextField
+                            label="Last Name"
+                            variant="outlined"
+                            name="lastName"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.lastName}
+                            error={
+                              Boolean(touched.lastName) &&
+                              Boolean(errors.lastName)
+                            }
+                            helperText={touched.lastName && errors.lastName}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            disabled
+                            // sx={{ minWidth: "243px" }}
+                            label="E-mail address"
+                            variant="outlined"
+                            name="email"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.email}
+                            error={
+                              Boolean(touched.email) && Boolean(errors.email)
+                            }
+                            helperText={touched.email && errors.email}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Contact number"
+                            variant="outlined"
+                            name="contactNumber"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.contactNumber}
+                            error={
+                              Boolean(touched.contactNumber) &&
+                              Boolean(errors.contactNumber)
+                            }
+                            helperText={
+                              touched.contactNumber && errors.contactNumber
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <label>Add profile picture: </label>
+                          <input
+                            id="image"
+                            name="image"
+                            type="file"
+                            onBlur={handleBlur}
+                            onChange={(event) =>
+                              setFieldValue(
+                                "image",
+                                event.currentTarget.files[0]
+                              )
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={12} sx={{ textAlign: "center" }}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            type="submit"
+                          >
+                            Update Details
+                          </Button>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sx={{ textAlign: "center" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          type="submit"
-                        >
-                          Update Details
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </form>
-                )}
-              </Formik>
+                    </form>
+                  )}
+                </Formik>
+              )}
             </TabPanel>
             <TabPanel value={value} index={1}>
               <Formik

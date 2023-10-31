@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import TextField from "@mui/material/TextField";
-import * as Yup from "yup";
+import { Link as RouterLink } from "react-router-dom";
 import { setLogin } from "../state";
 
 const CartPage = () => {
@@ -171,9 +171,11 @@ const CartPage = () => {
                       $
                     </Typography>
                   </Box>
-                <Box sx={{ textAlign: "center", margin: "1rem" }}>
-                  <Button variant="outlined">Proceed to Checkout</Button>
-                </Box>
+                  <Box sx={{ textAlign: "center", margin: "1rem" }}>
+                    <RouterLink to="/checkout">
+                      <Button variant="outlined">Proceed to Checkout</Button>
+                    </RouterLink>
+                  </Box>
                 </Card>
               </Grid>
             </Grid>
