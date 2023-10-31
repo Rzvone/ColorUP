@@ -239,7 +239,7 @@ const NavBar = () => {
           </Box>
           <RouterLink to='/cart'>
           {userLoggedIn.user?<IconButton aria-label="cart" sx={{marginRight:2}}>
-            <StyledBadge badgeContent={Object.values(userLoggedIn.user.cart.productQuantityMap).reduce((acc,cur)=>acc+=cur,0)||0} color="secondary">
+            <StyledBadge badgeContent={Object.values(userLoggedIn.user.cart.productQuantityMap).reduce((acc,cur)=>acc+=cur,0)} color="secondary">
               <ShoppingCartIcon />
             </StyledBadge>
           </IconButton>:<></>}  

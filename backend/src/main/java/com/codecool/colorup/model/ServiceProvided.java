@@ -2,6 +2,8 @@ package com.codecool.colorup.model;
 
 import com.codecool.colorup.enums.ServiceType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,7 +25,7 @@ public class ServiceProvided {
     @JsonBackReference
     private List<Appointment> appointments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "provider_id") // This should match the actual column name in your database
     private Provider provider;
 
