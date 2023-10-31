@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ public class ServiceProvidedController {
         this.serviceProvidedService = serviceProvidedService;
     }
 
+    @CrossOrigin("*")
     @GetMapping("/getServices")
     public ResponseEntity<?> getAllServices() {
         try {
@@ -33,7 +35,6 @@ public class ServiceProvidedController {
             CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.NOT_FOUND, "User or Provider not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            e.printStackTrace();
             CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
