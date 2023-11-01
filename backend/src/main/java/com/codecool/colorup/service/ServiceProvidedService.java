@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
 @Service
 public class ServiceProvidedService {
     private final ServiceProvidedRepository repository;
+    private final ProviderService providerService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public ServiceProvidedService(ServiceProvidedRepository repository, ModelMapper modelMapper) {
+    public ServiceProvidedService(ServiceProvidedRepository repository, ProviderService providerService, ModelMapper modelMapper) {
         this.repository = repository;
+        this.providerService = providerService;
         this.modelMapper = modelMapper;
     }
 
@@ -32,6 +34,8 @@ public class ServiceProvidedService {
         ServiceProvidedDTO dto = modelMapper.map(serviceProvided, ServiceProvidedDTO.class);
         dto.setFirstName(serviceProvided.getProvider().getFirstName());
         dto.setLastName(serviceProvided.getProvider().getLastName());
+        dto.setProviderId(serviceProvided.getProvider().getId());
+        dto.setProviderImage(providerService.imageToDataUrl(providerService.loadImageForProvider(serviceProvided.getProvider())));
         return dto;
     }
 }

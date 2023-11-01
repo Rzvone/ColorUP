@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class ServiceProvidedDTO {
     private Long id;
     private ServiceType serviceType;
+    private Long providerId;
+    private String providerImage;
     private String firstName;
     private String lastName;
     private int duration;
