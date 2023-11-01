@@ -1,6 +1,7 @@
-import { Box, Card, CardContent, Typography, Avatar } from "@mui/material"
+import { Box, Card, CardContent, Typography, Avatar, CardActionArea, Button } from "@mui/material"
 import {useEffect, useState} from "react"
 import { useSpring, animated } from 'react-spring';
+import {Link} from 'react-router-dom'
 
 const Services = () =>{
 
@@ -47,6 +48,9 @@ return (
             Price: ${service.price}
           </Typography>
         </CardContent>
+          <Link to={"/stylists/"+service.providerId}>
+          <Button>Make an appointment</Button>
+          </Link>
       </Card>
     </animated.div>
   ))}
