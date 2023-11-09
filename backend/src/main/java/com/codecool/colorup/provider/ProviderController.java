@@ -17,6 +17,7 @@ public class ProviderController {
     public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
     }
+
     @GetMapping("/getProviders")
     public List<ProviderResponse> getProviders(){
         return providerService.getProviders();

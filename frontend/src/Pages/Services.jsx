@@ -3,26 +3,15 @@ import {useEffect, useState} from "react"
 import { useSpring, animated } from 'react-spring';
 import {Link} from 'react-router-dom'
 
-const Services = () =>{
+const Services = ({services}) =>{
 
-const [services,setServices] = useState([])
-const [loading,setLoading] = useState(true)
+
 
 const cardAnimation = useSpring({
     from: { opacity: 0, transform: 'translateY(20px)' },
     to: { opacity: 1, transform: 'translateY(0)' },
   });
 
-useEffect(()=>{
-    const fetchData = async () =>{
-        const response = await fetch("http://localhost:8080/api/services/getServices")
-        const res = await response.json()
-        console.log(res)
-        setServices(res)
-        setLoading(false)
-    }
-    fetchData()
-},[])
 
 return (
   <Box sx={{ margin: 5 }}>

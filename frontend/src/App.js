@@ -23,7 +23,8 @@ import StylistPage from "./Pages/StylistPage";
 import AppointmentsPage from "./Pages/AppointmentsPage";
 import CartPage from "./Pages/CartPage";
 import Checkout from "./Pages/Checkout";
-import Services from "./Pages/Services";
+import ServicesPage from "./Pages/ServicesPage";
+import ServiceByTypePage from "./Pages/ServiceByTypePage";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -50,7 +51,8 @@ function App() {
             <Route path="/appointments" element={<AppointmentsPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/services" element={<Services/>}/>
+            <Route path="/services" element={<ServicesPage/>}/>
+            <Route path = "/services/:service" element={<ServiceByTypePage/>}/>
           </Routes>
         </LocalizationProvider>
       </ThemeProvider>

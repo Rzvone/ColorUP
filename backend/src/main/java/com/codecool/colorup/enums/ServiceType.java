@@ -2,8 +2,9 @@ package com.codecool.colorup.enums;
 
 public enum ServiceType {
 
-    NAILS,
+    MANICURE,
+    PEDICURE,
     LASHES,
-    PEDICURE
+
 
 }

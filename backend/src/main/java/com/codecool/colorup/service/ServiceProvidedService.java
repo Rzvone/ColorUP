@@ -1,6 +1,7 @@
 package com.codecool.colorup.service;
 
 import com.codecool.colorup.DTOS.ServiceProvidedDTO;
+import com.codecool.colorup.enums.ServiceType;
 import com.codecool.colorup.model.ServiceProvided;
 import com.codecool.colorup.repository.ServiceProvidedRepository;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,14 @@ public class ServiceProvidedService {
 
     public List<ServiceProvidedDTO> getAllServiceProvidedDTOs() {
         List<ServiceProvided> serviceProvidedList = repository.findAll();
+        List<ServiceProvidedDTO> serviceProvidedDTOs = serviceProvidedList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return serviceProvidedDTOs;
+    }
+
+    public List<ServiceProvidedDTO> getServiceProvidedByServiceType(ServiceType serviceType){
+        List<ServiceProvided> serviceProvidedList = repository.getServiceProvidedByServiceType(serviceType);
         List<ServiceProvidedDTO> serviceProvidedDTOs = serviceProvidedList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
