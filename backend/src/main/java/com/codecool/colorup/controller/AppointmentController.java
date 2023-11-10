@@ -56,11 +56,11 @@ public class AppointmentController {
             User updatedUser = userService.getUserById(userId);
             AppointmentResponseDTO responseDTO = new AppointmentResponseDTO(updatedUser, "Appointment created successfully");
             return ResponseEntity.ok(responseDTO);
-        } catch (EntityNotFoundException e) {
+        } catch (RuntimeException e) {
             // Handle the EntityNotFoundException (or other exceptions) here
             // Create a custom error response object with status code and message
-            CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.NOT_FOUND, "User or Provider not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, "Date not available");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         } catch (Exception e) {
             // Handle other exceptions here
             // Create a custom error response object with status code and message

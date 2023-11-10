@@ -99,14 +99,14 @@ const StylistPage = () => {
       }
     );
     const res = await response.json();
-    dispatch(
-      setLogin({
-        user: { ...user, appointments: res.user.appointments },
-        token: token,
-      })
-    );
     setOpen(true);
     if (response.ok) {
+      dispatch(
+        setLogin({
+          user: { ...user, appointments: res.user.appointments },
+          token: token,
+        })
+      );
       message.current = res.message;
       severity.current = "success";
     } else {

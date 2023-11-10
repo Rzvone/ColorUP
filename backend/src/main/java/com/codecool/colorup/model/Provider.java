@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,5 +26,8 @@ public class Provider extends User{
 
     @OneToMany(mappedBy = "provider")
     private List<ServiceProvided> servicesProvided = new ArrayList<>();
+
+    @OneToMany(mappedBy = "provider")
+    private List<DisabledTime> disabledTimes = new ArrayList<>();
 
 }
