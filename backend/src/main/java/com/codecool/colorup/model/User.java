@@ -53,6 +53,10 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Cart cart;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Address> addresses;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
