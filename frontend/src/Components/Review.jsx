@@ -4,6 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
+import {useSelector} from 'react-redux'
 
 const products = [
   {
@@ -38,22 +39,27 @@ const payments = [
 ];
 
 export default function Review() {
+  const cart = useSelector(state=>state.cart)
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Order summary
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+        {cart.map((c) => (
+          <ListItem key={c.product.name} sx={{ py: 1, px: 0 }}>
+            <ListItemText primary={c.product.name} secondary={c.quantity+" items"} />
+            <Typography variant="body2">${c.product.price}</Typography>
           </ListItem>
         ))}
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
+          ${cart.reduce(
+                        (acc, curr) =>
+                          (acc += curr.product.price * curr.quantity),
+                        0
+                      )}
           </Typography>
         </ListItem>
       </List>

@@ -16,27 +16,28 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import TextField from "@mui/material/TextField";
 import { Link as RouterLink } from "react-router-dom";
-import { setLogin } from "../state";
+import { setLogin, setCart } from "../state";
 
 const CartPage = () => {
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const [cart, setCart] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
   const theme = useTheme();
   const dispatch = useDispatch();
-
+  const cart = useSelector((state)=>state.cart)
+  console.log(cart)
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
         `http://localhost:8080/api/cart/getCart/${user.id}`
       );
       const res = await response.json();
-      console.log(res);
-      setCart(res);
+      console.log(res)
+      dispatch(setCart(res))
+      setIsLoading(false)
     };
     fetchData();
-  }, [user]);
-  console.log(cart);
+  }, [user, dispatch]);
 
   const changeQuantity = async (productId, flag) => {
     const response = await fetch(
@@ -58,12 +59,11 @@ const CartPage = () => {
     dispatch(
       setLogin({ user: { ...user, cart: res.user.cart }, token: token })
     );
-    // Assuming the response is the updated cart, update the cart state with the response data
   };
-  let total = 0;
 
   return (
     <>
+    {!isLoading?
       <Container fixed>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -182,7 +182,7 @@ const CartPage = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={5} lg={5}></Grid>
         </Grid>
-      </Container>
+      </Container>:<h1>loading..</h1>}
     </>
   );
 };

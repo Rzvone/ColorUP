@@ -3,7 +3,8 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
     user: null,
     token: null,
-    mode: "light"
+    mode: "light",
+    cart:[]
 }
 
 export const authSlice = createSlice({
@@ -20,9 +21,12 @@ export const authSlice = createSlice({
         },
         setMode:(state)=>{
             state.mode = state.mode==='dark' ? 'light' :'dark'
+        },
+        setCart:(state,action)=>{
+            state.cart = action.payload
         }
     }
 })
 
-export const {setLogin, setLogout, setMode} = authSlice.actions
+export const {setLogin, setLogout, setMode, setCart} = authSlice.actions
 export default authSlice.reducer

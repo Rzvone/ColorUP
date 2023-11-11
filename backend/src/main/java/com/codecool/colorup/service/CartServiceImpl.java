@@ -37,15 +37,12 @@ public class CartServiceImpl implements CartService{
         Cart cart = user.getCart();
         Map<Product, Integer> productQuantityMap = cart.getProductQuantityMap();
 
-        // Update the quantity in the productQuantityMap
         int newQuantity = productQuantityMap.getOrDefault(product, 0) + productCartDTO.getQuantity();
         productQuantityMap.put(product, newQuantity);
 
-        // Update the price based on the products' price and quantity
         double totalCartPrice = calculateTotalCartPrice(productQuantityMap);
         cart.setPrice(totalCartPrice);
 
-        // Save the updated cart
         cartRepository.save(cart);
     }
     @Override
@@ -56,18 +53,16 @@ public class CartServiceImpl implements CartService{
         Cart cart = user.getCart();
         Map<Product, Integer> productQuantityMap = cart.getProductQuantityMap();
 
-        // Update the quantity in the productQuantityMap
         int newQuantity = updateCartDTO.isAddOrRemove() ? productQuantityMap.getOrDefault(product, 0) + 1 : productQuantityMap.getOrDefault(product, 0) -1;
         if(newQuantity <1){
             productQuantityMap.remove(product);
         }else {
             productQuantityMap.put(product, newQuantity);
         }
-        // Update the price based on the products' price and quantity
+
         double totalCartPrice = calculateTotalCartPrice(productQuantityMap);
         cart.setPrice(totalCartPrice);
 
-        // Save the updated cart
         cartRepository.save(cart);
     }
     private double calculateTotalCartPrice(Map<Product, Integer> productQuantityMap) {
