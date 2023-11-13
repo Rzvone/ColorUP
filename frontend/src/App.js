@@ -25,10 +25,14 @@ import CartPage from "./Pages/CartPage";
 import Checkout from "./Pages/Checkout";
 import ServicesPage from "./Pages/ServicesPage";
 import ServiceByTypePage from "./Pages/ServiceByTypePage";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = createTheme(themeSettings(mode));
+  const stripePromise = loadStripe('pk_test_51OBvhaFYbTlUAj5kvWdCdlqbvaIlD7j0x3Fe8r02iiGezUHG8n6AbFb7kH5CKaw0QDFVi6u9NCMgeyDxKb5eDZlG00LtoWmhKj');
   return (
     <div>
       <ThemeProvider theme={theme}>
@@ -50,7 +54,11 @@ function App() {
             <Route path="/stylists/:id" element={<StylistPage />} />
             <Route path="/appointments" element={<AppointmentsPage />} />
             <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout" element={
+              <Elements stripe={stripePromise}>
+            <Checkout />
+              </Elements>
+            } />
             <Route path="/services" element={<ServicesPage/>}/>
             <Route path = "/services/:service" element={<ServiceByTypePage/>}/>
           </Routes>

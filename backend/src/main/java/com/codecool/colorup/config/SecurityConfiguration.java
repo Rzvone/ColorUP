@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/cart/**").permitAll()
                                 .requestMatchers("/api/services/**").permitAll()
                                 .requestMatchers("/api/address/**").hasRole("VISITOR")
+                                .requestMatchers("/api/payment/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 ).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
